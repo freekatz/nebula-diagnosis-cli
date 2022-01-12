@@ -1,0 +1,11 @@
+---
+version: 3.0
+
+outputDirPath:
+inputDirPath: data input dir
+ssh:
+  address: ip
+  port: ssh port
+  timeout: 3s
+  username: usr
+  password: pwd

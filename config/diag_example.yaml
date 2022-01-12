@@ -1,0 +1,6 @@
+---
+version: 3.0
+
+outputDirPath:
+inputDirPath: data input dir
+options:

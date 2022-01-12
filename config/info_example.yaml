@@ -1,0 +1,49 @@
+---
+version: 3.0
+
+# the common config will apply to each specific config
+common:
+  output:
+    ssh:
+      address: ip
+      port: ssh port
+      timeout: 3s
+      username: usr
+      password: pwd
+    # the following configs have default values
+    dirPath: # the dirPath is a relevant path of user home path
+  duration:
+  period:
+  options:
+
+node:
+  node0:
+    host:
+      address: ip
+      port: nebula graph port
+    ssh:
+      address: ip
+      port: ssh port
+      timeout: 3s
+      username: usr
+      password: pwd
+    services:
+      graph1:
+        type: graphService
+        deploy_dir: deploy_dir
+        runtime_dir: graphd dir
+        port: nebula graph port
+        http_port: nebula graph http port
+        http_2_port: nebula graph http2 port
+#    # the following config will overwrite the common config
+#    output:
+#      ssh:
+#        address:
+#        port:
+#        timeout:
+#        username:
+#        password:
+#      dirPath:
+#    duration:
+#    period:
+#    options:
