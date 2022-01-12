@@ -9,14 +9,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
 	"github.com/sirupsen/logrus"
 )
 
 var (
-	cmdLoggers  = make(map[string]*DefaultLogger, 0)
+	cmdLoggers  = make(map[string]*CMDLogger)
 	cmdMux      sync.RWMutex
-	fileLoggers = make(map[string]*DefaultLogger, 0)
+	fileLoggers = make(map[string]*FileLogger)
 	fileMux     sync.RWMutex
 )
 
@@ -30,131 +29,114 @@ type (
 		Errorf(string, ...interface{})
 		Fatal(...interface{})
 		Fatalf(string, ...interface{})
-		Filepath() string
-		Filename() string
 	}
 )
 
-// DefaultLogger impl the default logger by logrus
-type DefaultLogger struct {
+// defaultLogger impl the default logger by logrus
+type defaultLogger struct {
 	logr *logrus.Logger
-
-	logToFile bool
-	filepath  string
-	filename  string
 }
 
-func (d *DefaultLogger) Filepath() string {
-	return d.filepath
-}
-
-func (d *DefaultLogger) Filename() string {
-	return d.filename
-}
-
-func (d *DefaultLogger) Info(msg ...interface{}) {
+func (d *defaultLogger) Info(msg ...interface{}) {
 	d.info(fmt.Sprint(msg...))
 }
-func (d *DefaultLogger) Infof(format string, msg ...interface{}) {
+func (d *defaultLogger) Infof(format string, msg ...interface{}) {
 	d.info(fmt.Sprintf(format, msg...))
 }
-func (d *DefaultLogger) info(msg string) {
+func (d *defaultLogger) info(msg string) {
 	d.logr.Info(msg)
 }
-func (d *DefaultLogger) Warn(msg ...interface{}) {
+func (d *defaultLogger) Warn(msg ...interface{}) {
 	d.warn(fmt.Sprint(msg...))
 }
-func (d *DefaultLogger) Warnf(format string, msg ...interface{}) {
+func (d *defaultLogger) Warnf(format string, msg ...interface{}) {
 	d.warn(fmt.Sprintf(format, msg...))
 }
 
-func (d *DefaultLogger) warn(msg string) {
+func (d *defaultLogger) warn(msg string) {
 	d.logr.Warn(msg)
 }
-func (d *DefaultLogger) Error(msg ...interface{}) {
+func (d *defaultLogger) Error(msg ...interface{}) {
 	d.error(fmt.Sprint(msg...))
 }
-func (d *DefaultLogger) Errorf(format string, msg ...interface{}) {
+func (d *defaultLogger) Errorf(format string, msg ...interface{}) {
 	d.error(fmt.Sprintf(format, msg...))
 }
-func (d *DefaultLogger) error(msg string) {
+func (d *defaultLogger) error(msg string) {
 	d.logr.Error(msg)
 }
-func (d *DefaultLogger) Fatal(msg ...interface{}) {
+func (d *defaultLogger) Fatal(msg ...interface{}) {
 	d.fatal(fmt.Sprint(msg...))
 }
-func (d *DefaultLogger) Fatalf(format string, msg ...interface{}) {
+func (d *defaultLogger) Fatalf(format string, msg ...interface{}) {
 	d.fatal(fmt.Sprintf(format, msg...))
 }
-func (d *DefaultLogger) fatal(msg string) {
+func (d *defaultLogger) fatal(msg string) {
 	d.logr.Fatal(msg)
 }
 
-func GetCmdLogger(n string) Logger {
+type CMDLogger struct {
+	*defaultLogger
+}
+
+func GetCmdLogger(name string) Logger {
 	cmdMux.Lock()
-	if _, ok := cmdLoggers[n]; !ok {
-		initCmdLogger(n)
+	if _, ok := cmdLoggers[name]; !ok {
+		initCMDLogger(name)
 	}
 	cmdMux.Unlock()
 
 	cmdMux.RLock()
 	defer cmdMux.RUnlock()
-	return cmdLoggers[n]
+	return cmdLoggers[name]
 }
 
-func initCmdLogger(n string) {
+func initCMDLogger(name string) {
 	logr := logrus.New()
 	logr.SetFormatter(&logrus.TextFormatter{})
 	logr.SetOutput(os.Stdout)
-	logr.SetLevel(logrus.InfoLevel)
 
-	cmdLogger := new(DefaultLogger)
-	cmdLogger.logToFile = false
+	cmdLogger := &CMDLogger{&defaultLogger{}}
 	cmdLogger.logr = logr
-	cmdLoggers[n] = cmdLogger
-
-	timeUnix := time.Now().Unix()
-	filename := fmt.Sprintf("%s_%s", n, strconv.FormatInt(timeUnix, 10))
-	cmdLogger.filename = filename
-
+	cmdLoggers[name] = cmdLogger
 }
 
-func GetFileLogger(n string, o config.OutputConfig) Logger {
+type FileLogger struct {
+	*defaultLogger
+}
+
+func GetFileLogger(name string, dirPath string) Logger {
 	fileMux.Lock()
-	if _, ok := fileLoggers[n]; !ok {
-		initFileLogger(n, o)
+	if _, ok := fileLoggers[name]; !ok {
+		initFileLogger(name, dirPath)
 	}
 	fileMux.Unlock()
 
 	fileMux.RLock()
 	defer fileMux.RUnlock()
-	return fileLoggers[n]
+	return fileLoggers[name]
 }
 
-func initFileLogger(n string, o config.OutputConfig) {
+func initFileLogger(name string, dirPath string) {
 	logr := logrus.New()
 	logr.SetFormatter(&logrus.TextFormatter{})
+
 	timeUnix := time.Now().Unix()
-	p, _ := filepath.Abs(o.DirPath)
+	p, _ := filepath.Abs(dirPath)
 	_, err := os.Stat(p)
 	if os.IsNotExist(err) {
 		os.Mkdir(p, os.ModePerm)
 	}
-	fileLogger := new(DefaultLogger)
-	fileLogger.logToFile = true
 
-	filename := fmt.Sprintf("%s_%s", n, strconv.FormatInt(timeUnix, 10))
-
-	fileLogger.filename = filename
-	fileLogger.filepath = filepath.Join(p, filename+".log")
-	file, err := os.OpenFile(fileLogger.filepath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	filename := fmt.Sprintf("%s_%s", name, strconv.FormatInt(timeUnix, 10))
+	file, err := os.OpenFile(filepath.Join(p, filename+".log"), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		logr.Fatal(err)
 	}
 	writer := io.Writer(file)
-	logr.SetOutput(writer)
-	logr.SetLevel(logrus.InfoLevel)
 
+	logr.SetOutput(writer)
+	fileLogger := &FileLogger{&defaultLogger{}}
 	fileLogger.logr = logr
-	fileLoggers[n] = fileLogger
+	fileLoggers[name] = fileLogger
 }

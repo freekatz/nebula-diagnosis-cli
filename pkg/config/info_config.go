@@ -14,20 +14,20 @@ type (
 	}
 
 	CommonConfig struct {
-		Output   *OutputConfig `mapstructure:"output"`             // output location
-		Duration string        `mapstructure:"duration,omitempty"` // duration of info fetching, default is 0
-		Period   string        `mapstructure:"period,omitempty"`   // period of info fetching, default is 0
-		Options  []InfoOption  `mapstructure:"option,omitempty"`   // info to fetch, default is all
+		OutputDirPath string       `mapstructure:"outputDirPath"`      // output location
+		Duration      string       `mapstructure:"duration,omitempty"` // duration of info fetching, default is 0
+		Period        string       `mapstructure:"period,omitempty"`   // period of info fetching, default is 0
+		Options       []InfoOption `mapstructure:"option,omitempty"`   // info to fetch, default is all
 	}
 
 	NodeConfig struct {
-		Host     *HostConfig               `mapstructure:"host"`               // node host
-		SSH      *SSHConfig                `mapstructure:"ssh"`                // node ssh
-		Services map[string]*ServiceConfig `mapstructure:"services"`           // node service
-		Output   *OutputConfig             `mapstructure:"output"`             // output location
-		Duration string                    `mapstructure:"duration,omitempty"` // duration of info fetching, default is 0
-		Period   string                    `mapstructure:"period,omitempty"`   // period of info fetching, default is 0
-		Options  []InfoOption              `mapstructure:"option,omitempty"`   // info to fetch, default is all
+		Host          *HostConfig               `mapstructure:"host"`               // node host
+		SSH           *SSHConfig                `mapstructure:"ssh"`                // node ssh
+		Services      map[string]*ServiceConfig `mapstructure:"services"`           // node service
+		OutputDirPath string                    `mapstructure:"outputDirPath"`      // output location
+		Duration      string                    `mapstructure:"duration,omitempty"` // duration of info fetching, default is 0
+		Period        string                    `mapstructure:"period,omitempty"`   // period of info fetching, default is 0
+		Options       []InfoOption              `mapstructure:"option,omitempty"`   // info to fetch, default is all
 	}
 
 	HostConfig struct {
@@ -70,8 +70,12 @@ var (
 )
 
 func (c *InfoConfig) Complete() {
-	if c.Common != nil {
-		c.Common.Complete()
+	if c.Common == nil {
+		c.Common = new(CommonConfig)
+	}
+	c.Common.Complete()
+	if c.Node == nil {
+		c.Node = map[string]*NodeConfig{}
 	}
 	for _, node := range c.Node {
 		node.Complete(c.Common)
@@ -79,9 +83,6 @@ func (c *InfoConfig) Complete() {
 }
 
 func (c *InfoConfig) Validate() bool {
-	if c.Common == nil || c.Node == nil || !c.Common.Validate() {
-		return false
-	}
 	for _, info := range c.Node {
 		if !info.Validate() {
 			return false
@@ -91,8 +92,8 @@ func (c *InfoConfig) Validate() bool {
 }
 
 func (c *CommonConfig) Complete() {
-	if c.Output != nil {
-		c.Output.Complete()
+	if c.OutputDirPath == "" {
+		c.OutputDirPath = defaultOutputDirPath
 	}
 	if c.Duration == "" {
 		c.Duration = defaultDuration
@@ -105,19 +106,15 @@ func (c *CommonConfig) Complete() {
 	}
 }
 
-func (c *CommonConfig) Validate() bool {
-	return c.Output != nil && c.Output.Validate()
-}
-
 func (c *NodeConfig) Complete(common *CommonConfig) {
 	if c.SSH != nil {
 		c.SSH.Complete()
 	}
-	if c.Output == nil {
-		c.Output = common.Output
+	if c.OutputDirPath == "" {
+		c.OutputDirPath = common.OutputDirPath
 	}
-	if c.Output != nil {
-		c.Output.Complete()
+	if c.OutputDirPath == "" {
+		c.OutputDirPath = defaultOutputDirPath
 	}
 	if c.Duration == "" {
 		c.Duration = common.Duration
@@ -148,7 +145,7 @@ func (c *NodeConfig) Validate() bool {
 			return false
 		}
 	}
-	if c.Output == nil || !c.Output.Validate() || !ValidateDuration(c.Duration) || !ValidatePeriod(c.Period) {
+	if !ValidateDuration(c.Duration) || !ValidatePeriod(c.Period) {
 		return false
 	}
 	return true

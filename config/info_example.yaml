@@ -3,15 +3,7 @@ version: 3.0
 
 # the common config will apply to each specific config
 common:
-  output:
-    ssh:
-      address: ip
-      port: ssh port
-      timeout: 3s
-      username: usr
-      password: pwd
-    # the following configs have default values
-    dirPath: # the dirPath is a relevant path of user home path
+  outputDirPath:
   duration:
   period:
   options:
@@ -36,14 +28,7 @@ node:
         http_port: nebula graph http port
         http_2_port: nebula graph http2 port
 #    # the following config will overwrite the common config
-#    output:
-#      ssh:
-#        address:
-#        port:
-#        timeout:
-#        username:
-#        password:
-#      dirPath:
+#    outputDirPath:
 #    duration:
 #    period:
 #    options:
