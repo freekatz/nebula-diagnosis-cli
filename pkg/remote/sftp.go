@@ -1,7 +1,6 @@
 package remote
 
 import (
-	"fmt"
 	"golang.org/x/crypto/ssh"
 	"io"
 	"os"
@@ -78,9 +77,9 @@ func (c *SFTPClient) GetFilesInRemoteDir(remoteDir string, localDir string) erro
 	p, _ := filepath.Abs(localDir)
 	_, err := os.Stat(p)
 	if os.IsNotExist(err) {
-		err := os.Mkdir(p, os.ModePerm)
+		err := os.MkdirAll(p, os.ModePerm)
 		if err != nil {
-			fmt.Println(err.Error())
+			return err
 		}
 	}
 
@@ -88,7 +87,11 @@ func (c *SFTPClient) GetFilesInRemoteDir(remoteDir string, localDir string) erro
 	for _, fileInfo := range filesInfo {
 
 		if fileInfo.IsDir() {
-			continue
+			dirName := fileInfo.Name()
+			// remoteDir is under the Linux path by default
+			remoteSubDir := remoteDir + "/" +dirName
+			localSubDir :=  filepath.Join(localDir, dirName)
+			c.GetFilesInRemoteDir(remoteSubDir, localSubDir)
 		}
 		srcPath := remoteDir + "/" + fileInfo.Name()
 		src, err := c.Client.OpenFile(srcPath, os.O_RDONLY)
