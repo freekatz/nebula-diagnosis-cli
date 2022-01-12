@@ -20,7 +20,6 @@ func TestGetSFTPClient(t *testing.T) {
 
 	client, err := remote.GetSFTPClient(conf.Username, conf)
 	if err != nil {
-		log.Fatal(err.Error())
 	}
 
 	//err = client.GetFileInRemotePath(path, localDir)
