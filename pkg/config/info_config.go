@@ -37,7 +37,6 @@ type (
 
 	ServiceConfig struct {
 		Type       ComponentType `mapstructure:"type"`
-		DeployDir  string        `mapstructure:"deploy_dir"`
 		RuntimeDir string        `mapstructure:"runtime_dir"`
 		Port       int           `mapstructure:"port"`
 		HTTPPort   int           `mapstructure:"http_port"`
@@ -58,9 +57,9 @@ const (
 type ComponentType string
 
 const (
-	ServiceGraph   ComponentType = "serviceGraph"
-	ServiceMeta    ComponentType = "serviceMeta"
-	ServiceStorage ComponentType = "serviceStorage"
+	ServiceGraph   ComponentType = "NebulaGraph"
+	ServiceMeta    ComponentType = "NebulaMeta"
+	ServiceStorage ComponentType = "NebulaStorage"
 )
 
 var (

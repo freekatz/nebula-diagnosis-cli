@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func GetNebulaMetrics(ipAddress string, port int32) ([]string, error) {
+func GetNebulaMetrics(ipAddress string, port int) ([]string, error) {
 	httpClient := http.Client{
 		Timeout: time.Second * 2,
 	}
@@ -30,7 +30,7 @@ func GetNebulaMetrics(ipAddress string, port int32) ([]string, error) {
 	return metrics, nil
 }
 
-func GetNebulaComponentStatus(ipAddress string, port int32) ([]string, error) {
+func GetNebulaComponentStatus(ipAddress string, port int) ([]string, error) {
 	httpClient := http.Client{
 		Timeout: time.Second * 2,
 	}
@@ -55,13 +55,12 @@ func GetNebulaComponentStatus(ipAddress string, port int32) ([]string, error) {
 	if err := json.Unmarshal(bytes, &status); err != nil {
 		return nil, err
 	}
-
-	statusMetrics := []string{status.Status}
+	statusMetrics := []string{status.GitInfoSha, status.Status}
 
 	return statusMetrics, nil
 }
 
-func GetNebulaFlags(ipAddress string, port int32) ([]string, error) {
+func GetNebulaFlags(ipAddress string, port int) ([]string, error) {
 	httpClient := http.Client{
 		Timeout: time.Second * 10,
 	}
@@ -77,7 +76,7 @@ func GetNebulaFlags(ipAddress string, port int32) ([]string, error) {
 		return []string{}, err
 	}
 
-	configs := strings.Split(strings.TrimSpace(string(bytes)), "\n")
+	flags := strings.Split(strings.TrimSpace(string(bytes)), "\n")
 
-	return configs, nil
+	return flags, nil
 }

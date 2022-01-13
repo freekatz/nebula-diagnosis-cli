@@ -9,7 +9,7 @@ import (
 
 func TestGetNebulaMetrics(t *testing.T) {
 	ip := "192.168.8.49"
-	var port int32 = 19669
+	var port int = 19669
 	metrics, err := remote.GetNebulaMetrics(ip, port)
 	if err != nil {
 		log.Fatal(err.Error())
@@ -19,7 +19,7 @@ func TestGetNebulaMetrics(t *testing.T) {
 
 func TestGetNebulaComponentStatus(t *testing.T) {
 	ip := "192.168.8.49"
-	var port int32 = 19669
+	var port int = 19669
 	metrics, err := remote.GetNebulaComponentStatus(ip, port)
 	if err != nil {
 		log.Fatal(err.Error())
@@ -29,7 +29,7 @@ func TestGetNebulaComponentStatus(t *testing.T) {
 
 func TestGetNebulaFlags(t *testing.T) {
 	ip := "192.168.8.49"
-	var port int32 = 19669
+	var port int = 19669
 	metrics, err := remote.GetNebulaFlags(ip, port)
 	if err != nil {
 		log.Fatal(err.Error())
