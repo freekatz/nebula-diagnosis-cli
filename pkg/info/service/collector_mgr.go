@@ -9,10 +9,10 @@ import (
 var collectors = make(map[string]*NebulaCollector)
 var mux sync.RWMutex
 
-func GetServiceExporter(ncid string, conf *config.NodeConfig, serviceConfig *config.ServiceConfig) (*NebulaCollector, error) {
+func GetServiceCollector(ncid string, conf *config.NodeConfig, serviceConfig *config.ServiceConfig) (*NebulaCollector, error) {
 	mux.Lock()
 	if _, ok := collectors[ncid]; !ok {
-		c, err := newServiceExporter(ncid, conf, serviceConfig)
+		c, err := newServiceCollector(ncid, conf, serviceConfig)
 		if err != nil {
 			return nil, err
 		}
@@ -27,7 +27,7 @@ func GetServiceExporter(ncid string, conf *config.NodeConfig, serviceConfig *con
 	return collectors[ncid], nil
 }
 
-func newServiceExporter(ncid string, conf *config.NodeConfig, serviceConfig *config.ServiceConfig) (*NebulaCollector, error) {
+func newServiceCollector(ncid string, conf *config.NodeConfig, serviceConfig *config.ServiceConfig) (*NebulaCollector, error) {
 	serviceType := serviceConfig.Type
 	c := new(NebulaCollector)
 	c.NebulaType = serviceType

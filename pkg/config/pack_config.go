@@ -5,23 +5,24 @@ import (
 	"github.com/spf13/viper"
 )
 
-type PackageConfig struct {
+type PackConfig struct {
 	OutputDirPath string    `mapstructure:"outputDirPath,omitempty"` // output location
 	InputDirPath  string    `mapstructure:"inputDirPath"`            // input location
 	SSH           SSHConfig `mapstructure:"ssh"`                     // ssh config for upload
 }
 
-func (c *PackageConfig) Complete() {
+// Complete TODO modify the output dir path
+func (c *PackConfig) Complete() {
 	if c.OutputDirPath == "" {
 		c.OutputDirPath = defaultOutputDirPath
 	}
 }
 
-func (c *PackageConfig) Validate() bool {
+func (c *PackConfig) Validate() bool {
 	return c.InputDirPath != ""
 }
 
-func NewPackageConfig(confPath string, configType string) (*PackageConfig, error) {
+func NewPackConfig(confPath string, configType string) (*PackConfig, error) {
 	var viperConfig = viper.New()
 	viperConfig.SetConfigName(confPath)
 	viperConfig.SetConfigFile(confPath)
@@ -30,7 +31,7 @@ func NewPackageConfig(confPath string, configType string) (*PackageConfig, error
 		return nil, err
 	}
 
-	conf := new(PackageConfig)
+	conf := new(PackConfig)
 	err := viperConfig.Unmarshal(conf)
 	if err != nil {
 		return nil, err

@@ -39,10 +39,20 @@ func TestNewDiagConfig(t *testing.T) {
 	log.Println(conf)
 }
 
-func TestNewPackageConfig(t *testing.T) {
-	confPath := "../config/package_debug.yaml"
+func TestNewPackConfig(t *testing.T) {
+	confPath := "../config/pack_debug.yaml"
 
-	conf, err := config.NewPackageConfig(confPath, "yaml")
+	conf, err := config.NewPackConfig(confPath, "yaml")
+	if err != nil {
+		t.Error(err.Error())
+		return
+	}
+
+	log.Println(conf)
+}
+
+func TestNewUnPackConfig(t *testing.T) {
+	conf, err := config.NewUnPackConfig("./in", "./out")
 	if err != nil {
 		t.Error(err.Error())
 		return
