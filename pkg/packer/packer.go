@@ -3,8 +3,11 @@ package packer
 import (
 	"archive/tar"
 	"compress/gzip"
+	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
+	"github.com/1uvu/nebula-diagnosis-cli/pkg/utils"
 	"io"
 	"io/fs"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -17,25 +20,14 @@ func NewTgzPacker() *TgzPacker {
 	return &TgzPacker{}
 }
 
-// removeTargetFile remove target file
-func (tp *TgzPacker) removeTargetFile(fileName string) (err error) {
-	if _, err := os.Stat(fileName); os.IsNotExist(err) {
-		return nil
-	}
-	return os.Remove(fileName)
-}
-
-// dirExists is dir existed
-func (tp *TgzPacker) dirExists(dir string) bool {
-	info, err := os.Stat(dir)
-	return (err == nil || os.IsExist(err)) && info.IsDir()
-}
-
-// tarFile sourceFullFile is the source path of file
-func (tp *TgzPacker) tarFile(sourceFullFile string, writer *tar.Writer) error {
-	info, err := os.Stat(sourceFullFile)
+// tarFile write the file into tar.writer
+func (tp *TgzPacker) tarFile(tarWriter *tar.Writer, tarFilepath string) error {
+	info, err := os.Stat(tarFilepath)
 	if err != nil {
-		return err
+		return errorx.ErrFileNotExisted
+	}
+	if info.IsDir() {
+		return errorx.ErrFileTypeNotMatch
 	}
 
 	header, err := tar.FileInfoHeader(info, "")
@@ -43,30 +35,30 @@ func (tp *TgzPacker) tarFile(sourceFullFile string, writer *tar.Writer) error {
 		return err
 	}
 
-	err = writer.WriteHeader(header)
+	err = tarWriter.WriteHeader(header)
 	if err != nil {
 		return err
 	}
 
-	fr, err := os.Open(sourceFullFile)
+	fr, err := os.Open(tarFilepath)
 	if err != nil {
 		return err
 	}
 	defer func() {
-		if err2 := fr.Close(); err2 != nil && err == nil {
-			err = err2
+		if e := fr.Close(); e != nil && err == nil {
+			err = e
 		}
 	}()
-	if _, err = io.Copy(writer, fr); err != nil {
+	if _, err = io.Copy(tarWriter, fr); err != nil {
 		return err
 	}
 	return nil
 }
 
 // tarFolder sourceFullPath is the source path of folder, baseName is the base name of tar file
-func (tp *TgzPacker) tarFolder(writer *tar.Writer, sourceFullPath string, baseName string) error {
-	baseFullPath := sourceFullPath
-	return filepath.Walk(sourceFullPath, func(fileName string, info fs.FileInfo, err error) error {
+func (tp *TgzPacker) tarFolder(tarWriter *tar.Writer, tarFilepath string, baseFilename string) error {
+	baseFilepath := tarFilepath
+	return filepath.Walk(tarFilepath, func(fileName string, info fs.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -76,12 +68,14 @@ func (tp *TgzPacker) tarFolder(writer *tar.Writer, sourceFullPath string, baseNa
 			return err
 		}
 
-		if fileName == baseFullPath {
-			header.Name = baseName
+		if fileName == baseFilepath {
+			header.Name = baseFilename
 		} else {
-			header.Name = filepath.Join(baseName, strings.TrimPrefix(fileName, baseFullPath))
+			header.Name = filepath.Join(baseFilename, strings.TrimPrefix(fileName, baseFilepath))
 		}
-		if err = writer.WriteHeader(header); err != nil {
+
+		log.Println(header.Name)
+		if err = tarWriter.WriteHeader(header); err != nil {
 			return err
 		}
 		if !info.Mode().IsRegular() {
@@ -93,7 +87,7 @@ func (tp *TgzPacker) tarFolder(writer *tar.Writer, sourceFullPath string, baseNa
 			return err
 		}
 		defer fr.Close()
-		if _, err := io.Copy(writer, fr); err != nil {
+		if _, err := io.Copy(tarWriter, fr); err != nil {
 			return err
 		}
 		return nil
@@ -101,100 +95,44 @@ func (tp *TgzPacker) tarFolder(writer *tar.Writer, sourceFullPath string, baseNa
 }
 
 // Pack sourceFullPath is the source path of file or folder, tarFileName is the tar package
-func (tp *TgzPacker) Pack(sourceFullPath string, tarFileName string) (err error) {
-	sourceInfo, err := os.Stat(sourceFullPath)
+func (tp *TgzPacker) Pack(tarFilepath string, tarFilename string) (err error) {
+	tarFilepath = strings.TrimPrefix(tarFilepath, "./")
+	tarFilename = strings.TrimPrefix(tarFilename, "./")
+	info, err := os.Stat(tarFilepath)
 	if err != nil {
 		return err
 	}
 
-	if err = tp.removeTargetFile(tarFileName); err != nil {
-		return err
+	if utils.IsFileExisted(tarFilename) {
+		return errorx.ErrFileHasExisted
 	}
 
-	file, err := os.Create(tarFileName)
+	file, err := os.Create(tarFilename)
 	if err != nil {
 		return err
 	}
 	defer func() {
-		if err2 := file.Close(); err2 != nil && err == nil {
-			err = err2
+		if e := file.Close(); e != nil && err == nil {
+			err = e
 		}
 	}()
 
-	gWriter := gzip.NewWriter(file)
+	gzipWriter := gzip.NewWriter(file)
 	defer func() {
-		if err2 := gWriter.Close(); err2 != nil && err == nil {
-			err = err2
+		if e := gzipWriter.Close(); e != nil && err == nil {
+			err = e
 		}
 	}()
 
-	tarWriter := tar.NewWriter(gWriter)
+	tarWriter := tar.NewWriter(gzipWriter)
 	defer func() {
 		if err2 := tarWriter.Close(); err2 != nil && err == nil {
 			err = err2
 		}
 	}()
 
-	if sourceInfo.IsDir() {
-		return tp.tarFolder(tarWriter, sourceFullPath, filepath.Base(sourceFullPath))
+	if info.IsDir() {
+		return tp.tarFolder(tarWriter, tarFilepath, filepath.Base(tarFilepath))
 	}
-	return tp.tarFile(sourceFullPath, tarWriter)
-}
-
-// UnPack tarFileName is the tar package，dstDir is the dst dir path
-func (tp *TgzPacker) UnPack(tarFileName string, dstDir string) (err error) {
-	fr, err := os.Open(tarFileName)
-	if err != nil {
-		return err
-	}
-	defer func() {
-		if err2 := fr.Close(); err2 != nil && err == nil {
-			err = err2
-		}
-	}()
-
-	gr, err := gzip.NewReader(fr)
-	if err != nil {
-		return err
-	}
-	defer func() {
-		if err2 := gr.Close(); err2 != nil && err == nil {
-			err = err2
-		}
-	}()
-
-	tarReader := tar.NewReader(gr)
-	for {
-		header, err := tarReader.Next()
-		switch {
-		case err == io.EOF:
-			return nil
-		case err != nil:
-			return err
-		case header == nil:
-			continue
-		}
-
-		targetFullPath := filepath.Join(dstDir, header.Name)
-		switch header.Typeflag {
-		case tar.TypeDir:
-			if exists := tp.dirExists(targetFullPath); !exists {
-				if err = os.MkdirAll(targetFullPath, 0755); err != nil {
-					return err
-				}
-			}
-		case tar.TypeReg:
-			file, err := os.OpenFile(targetFullPath, os.O_CREATE|os.O_RDWR, os.FileMode(header.Mode))
-			if err != nil {
-				return err
-			}
-			_, err = io.Copy(file, tarReader)
-			if err2 := file.Close(); err2 != nil {
-				return err2
-			}
-			if err != nil {
-				return err
-			}
-		}
-	}
+	return tp.tarFile(tarWriter, tarFilepath)
 }

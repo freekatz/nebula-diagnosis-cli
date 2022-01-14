@@ -2,6 +2,9 @@
 *.log
 *.txt
 
+# tar files
+*.tar.gz
+
 # yaml config file
 *_debug.yaml
 *_product.yaml

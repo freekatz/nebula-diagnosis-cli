@@ -12,12 +12,12 @@ type NebulaCollector struct {
 	Id string
 
 	// Save and return the latest collected data,
-	NebulaStatusInfo *NebulaStatusInfo
+	NebulaStatusInfo  *NebulaStatusInfo
 	NebulaMetricsInfo *NebulaMetricsInfo
-	NebulaFlagsInfo *NebulaFlagsInfo
+	NebulaFlagsInfo   *NebulaFlagsInfo
 
-	NebulaType config.ComponentType
-	NodeConfig *config.NodeConfig
+	NebulaType    config.ComponentType
+	NodeConfig    *config.NodeConfig
 	ServiceConfig *config.ServiceConfig
 
 	SshClient *remote.SFTPClient
@@ -45,7 +45,7 @@ func (c *NebulaCollector) CollectStatusInfo() (NebulaStatusInfo, error) {
 	}
 	c.NebulaStatusInfo = &NebulaStatusInfo{
 		GitInfoSha: status[0],
-		Status: status[1],
+		Status:     status[1],
 	}
 	return *c.NebulaStatusInfo, nil
 }
@@ -82,7 +82,7 @@ func (c *NebulaCollector) PackageLogs() error {
 		remoteLogDir = queryValue.Value
 	}
 	if remoteLogDir == "" {
-		return errorx.ErrLogDirInvalid
+		return errorx.ErrRemoteLogDirInvalid
 	}
 	if !strings.HasPrefix(remoteLogDir, "/") {
 		remoteLogDir = c.ServiceConfig.RuntimeDir + "/" + remoteLogDir
