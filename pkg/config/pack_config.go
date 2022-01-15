@@ -15,14 +15,14 @@ type PackConfig struct {
 	SSH           *SSHConfig `mapstructure:"ssh"`                     // ssh config for upload
 }
 
-// Complete TODO modify the output dir path
 func (c *PackConfig) Complete() {
 	if c.OutputDirPath == "" {
 		c.OutputDirPath = defaultOutputDirPath
 	}
 	if c.TarFilename == "" {
 		c.TarFilename = strings.Join([]string{filepath.Base(c.TarFilepath), ".tar.gz"}, "")
-	} else if !strings.HasSuffix(c.TarFilename, ".tar") || !strings.HasSuffix(c.TarFilename, ".tar.gz") {
+	}
+	if !strings.HasSuffix(c.TarFilename, ".tar") && !strings.HasSuffix(c.TarFilename, ".gz") {
 		c.TarFilename = strings.Join([]string{c.TarFilename, ".tar.gz"}, "")
 	}
 }

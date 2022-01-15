@@ -20,14 +20,14 @@ var (
 
 type (
 	Logger interface {
-		Info(bool, ...interface{})
-		Infof(bool, string, ...interface{})
-		Warn(bool, ...interface{})
-		Warnf(bool, string, ...interface{})
-		Error(bool, ...interface{})
-		Errorf(bool, string, ...interface{})
-		Fatal(bool, ...interface{})
-		Fatalf(bool, string, ...interface{})
+		Info(...interface{})
+		Infof(string, ...interface{})
+		Warn(...interface{})
+		Warnf(string, ...interface{})
+		Error(...interface{})
+		Errorf(string, ...interface{})
+		Fatal(...interface{})
+		Fatalf(string, ...interface{})
 	}
 )
 
@@ -37,77 +37,74 @@ type defaultLogger struct {
 	fileLogger    *logrus.Logger
 	name          string
 	outputDirPath string
+	logToFile     bool
 }
 
-func (d *defaultLogger) Info(logToFile bool, msg ...interface{}) {
-	d.info(logToFile, strings.Join([]string{d.name, fmt.Sprint(msg...)}, ": "))
+func (d *defaultLogger) Info(msg ...interface{}) {
+	d.info(strings.Join([]string{d.name, fmt.Sprint(msg...)}, ": "))
 }
-func (d *defaultLogger) Infof(logToFile bool, format string, msg ...interface{}) {
-	d.info(logToFile, strings.Join([]string{d.name, fmt.Sprintf(format, msg...)}, ": "))
+func (d *defaultLogger) Infof(format string, msg ...interface{}) {
+	d.info(strings.Join([]string{d.name, fmt.Sprintf(format, msg...)}, ": "))
 }
-func (d *defaultLogger) info(logToFile bool, msg string) {
-	if logToFile && d.outputDirPath == "" {
+func (d *defaultLogger) info(msg string) {
+	if d.logToFile && d.outputDirPath == "" {
 		d.cmdLogger.Warn("logger output dir path is \"\", so redirect the logging into cmd")
 	}
-	if logToFile && d.outputDirPath != "" {
+	d.cmdLogger.Info(msg)
+	if d.logToFile && d.outputDirPath != "" {
 		d.fileLogger.Info(msg)
-	} else {
-		d.cmdLogger.Info(msg)
 	}
 }
-func (d *defaultLogger) Warn(logToFile bool, msg ...interface{}) {
-	d.warn(logToFile, strings.Join([]string{d.name, fmt.Sprint(msg...)}, ": "))
+func (d *defaultLogger) Warn(msg ...interface{}) {
+	d.warn(strings.Join([]string{d.name, fmt.Sprint(msg...)}, ": "))
 }
-func (d *defaultLogger) Warnf(logToFile bool, format string, msg ...interface{}) {
-	d.warn(logToFile, strings.Join([]string{d.name, fmt.Sprintf(format, msg...)}, ": "))
+func (d *defaultLogger) Warnf(format string, msg ...interface{}) {
+	d.warn(strings.Join([]string{d.name, fmt.Sprintf(format, msg...)}, ": "))
 }
-func (d *defaultLogger) warn(logToFile bool, msg string) {
-	if logToFile && d.outputDirPath == "" {
+func (d *defaultLogger) warn(msg string) {
+	if d.logToFile && d.outputDirPath == "" {
 		d.cmdLogger.Warn("logger output dir path is \"\", so redirect the logging into cmd")
 	}
-	if logToFile && d.outputDirPath != "" {
-		d.fileLogger.Warn(msg)
-	} else {
-		d.cmdLogger.Warn(msg)
+	d.cmdLogger.Info(msg)
+	if d.logToFile && d.outputDirPath != "" {
+		d.fileLogger.Info(msg)
 	}
 }
-func (d *defaultLogger) Error(logToFile bool, msg ...interface{}) {
-	d.error(logToFile, strings.Join([]string{d.name, fmt.Sprint(msg...)}, ": "))
+func (d *defaultLogger) Error(msg ...interface{}) {
+	d.error(strings.Join([]string{d.name, fmt.Sprint(msg...)}, ": "))
 }
-func (d *defaultLogger) Errorf(logToFile bool, format string, msg ...interface{}) {
-	d.error(logToFile, strings.Join([]string{d.name, fmt.Sprintf(format, msg...)}, ": "))
+func (d *defaultLogger) Errorf(format string, msg ...interface{}) {
+	d.error(strings.Join([]string{d.name, fmt.Sprintf(format, msg...)}, ": "))
 }
-func (d *defaultLogger) error(logToFile bool, msg string) {
-	if logToFile && d.outputDirPath == "" {
+func (d *defaultLogger) error(msg string) {
+	if d.logToFile && d.outputDirPath == "" {
 		d.cmdLogger.Warn("logger output dir path is \"\", so redirect the logging into cmd")
 	}
-	if logToFile && d.outputDirPath != "" {
-		d.fileLogger.Error(msg)
-	} else {
-		d.cmdLogger.Error(msg)
+	d.cmdLogger.Info(msg)
+	if d.logToFile && d.outputDirPath != "" {
+		d.fileLogger.Info(msg)
 	}
 }
-func (d *defaultLogger) Fatal(logToFile bool, msg ...interface{}) {
-	d.fatal(logToFile, strings.Join([]string{d.name, fmt.Sprint(msg...)}, ": "))
+func (d *defaultLogger) Fatal(msg ...interface{}) {
+	d.fatal(strings.Join([]string{d.name, fmt.Sprint(msg...)}, ": "))
 }
-func (d *defaultLogger) Fatalf(logToFile bool, format string, msg ...interface{}) {
-	d.fatal(logToFile, strings.Join([]string{d.name, fmt.Sprintf(format, msg...)}, ": "))
+func (d *defaultLogger) Fatalf(format string, msg ...interface{}) {
+	d.fatal(strings.Join([]string{d.name, fmt.Sprintf(format, msg...)}, ": "))
 }
-func (d *defaultLogger) fatal(logToFile bool, msg string) {
-	if logToFile && d.outputDirPath == "" {
+func (d *defaultLogger) fatal(msg string) {
+	if d.logToFile && d.outputDirPath == "" {
 		d.cmdLogger.Warn("logger output dir path is \"\", so redirect the logging into cmd")
 	}
-	if logToFile && d.outputDirPath != "" {
-		d.fileLogger.Fatal(msg)
-	} else {
-		d.cmdLogger.Fatal(msg)
+	d.cmdLogger.Info(msg)
+	if d.logToFile && d.outputDirPath != "" {
+		d.fileLogger.Info(msg)
 	}
 }
 
-func GetLogger(name string, outputDirPath string) Logger {
+func GetLogger(name string, outputDirPath string, logToFile bool) Logger {
 	mux.Lock()
 	if _, ok := loggers[name]; !ok {
-		initLogger(name, outputDirPath)
+		initLogger(name, outputDirPath, logToFile)
 	}
 	mux.Unlock()
 
@@ -116,7 +113,7 @@ func GetLogger(name string, outputDirPath string) Logger {
 	return loggers[name]
 }
 
-func initLogger(name string, outputDirPath string) {
+func initLogger(name string, outputDirPath string, logToFile bool) {
 	_logger := &defaultLogger{}
 
 	cmdLogr := logrus.New()
@@ -124,7 +121,7 @@ func initLogger(name string, outputDirPath string) {
 	cmdLogr.SetOutput(os.Stdout)
 	_logger.cmdLogger = cmdLogr
 
-	if outputDirPath != "" {
+	if logToFile {
 		fileLogr := logrus.New()
 		fileLogr.SetFormatter(&logrus.TextFormatter{})
 		timeUnix := time.Now().Unix()
@@ -145,5 +142,7 @@ func initLogger(name string, outputDirPath string) {
 	}
 
 	_logger.name = name
+	_logger.outputDirPath = outputDirPath
+	_logger.logToFile = logToFile
 	loggers[name] = _logger
 }

@@ -2,10 +2,12 @@
 - [x] config
 - [ ] internal
   - [x] cmd
-  - [ ] info
-  - [ ] pack
+  - [x] info
+  - [ ] diag
+  - [x] pack
 - [x] pkg
   - [x] config
+  - [ ] diag
   - [x] errorx
   - [x] info
   - [x] logger

@@ -7,11 +7,11 @@ import (
 )
 
 func TestGetCMDLogger(t *testing.T) {
-	cmdLogger := logger.GetLogger("test_cmd", "")
-	cmdLogger.Info(false, "test cmd logger")
+	cmdLogger := logger.GetLogger("test_cmd", "", false)
+	cmdLogger.Info("test cmd logger")
 }
 
 func TestGetFileLogger(t *testing.T) {
-	fileLogger := logger.GetLogger("test_file", "./tmp")
-	fileLogger.Info(true, "test cmd logger")
+	fileLogger := logger.GetLogger("test_file", "./tmp", true)
+	fileLogger.Info("test cmd logger")
 }

@@ -15,6 +15,7 @@ type (
 
 	CommonConfig struct {
 		OutputDirPath string       `mapstructure:"outputDirPath"`      // output location
+		LogToFile     bool         `mapstructure:"logToFile"`          // logging to file or cmd
 		Duration      string       `mapstructure:"duration,omitempty"` // duration of info fetching, default is 0
 		Period        string       `mapstructure:"period,omitempty"`   // period of info fetching, default is 0
 		Options       []InfoOption `mapstructure:"options,omitempty"`  // info to fetch, default is all
@@ -25,6 +26,7 @@ type (
 		SSH           *SSHConfig                `mapstructure:"ssh"`                // node ssh
 		Services      map[string]*ServiceConfig `mapstructure:"services"`           // node service
 		OutputDirPath string                    `mapstructure:"outputDirPath"`      // output location
+		LogToFile     bool                      `mapstructure:"logToFile"`          // logging to file or cmd
 		Duration      string                    `mapstructure:"duration,omitempty"` // duration of info fetching, default is 0
 		Period        string                    `mapstructure:"period,omitempty"`   // period of info fetching, default is 0
 		Options       []InfoOption              `mapstructure:"option,omitempty"`   // info to fetch, default is all
@@ -115,6 +117,9 @@ func (c *NodeConfig) Complete(common *CommonConfig) {
 	}
 	if c.OutputDirPath == "" {
 		c.OutputDirPath = defaultOutputDirPath
+	}
+	if !c.LogToFile {
+		c.LogToFile = common.LogToFile
 	}
 	if c.Duration == "" {
 		c.Duration = common.Duration

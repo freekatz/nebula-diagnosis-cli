@@ -7,6 +7,7 @@ import (
 
 type DiagConfig struct {
 	OutputDirPath string       `mapstructure:"outputDirPath,omitempty"` // output location
+	LogToFile     bool         `mapstructure:"logToFile"`               // logging to file or cmd
 	InputDirPath  string       `mapstructure:"inputDirPath"`            // input location
 	Options       []DiagOption `mapstructure:"option,omitempty"`        // diag result to analyze, default is all
 }

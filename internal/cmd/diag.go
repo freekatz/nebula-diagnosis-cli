@@ -19,6 +19,12 @@ var diagCMD = &cli.Command{
 			Usage:   "--output_dir_path or -O, the output dir of diag results, logs, and others output",
 			Value:   "./output",
 		},
+		&cli.BoolFlag{
+			Name:    "log_to_file",
+			Aliases: []string{"L"},
+			Usage:   "--log_to_file or -L, logging to file",
+			Value:   false,
+		},
 		&cli.StringFlag{
 			Name:    "input_dir_path",
 			Aliases: []string{"I"},
@@ -38,6 +44,9 @@ var diagCMD = &cli.Command{
 		if ctx.IsSet("output_dir_path") {
 			outputDirPath := ctx.String("output_dir_path")
 			GlobalDiagConfig.OutputDirPath = outputDirPath
+		}
+		if ctx.IsSet("log_to_file") {
+			GlobalDiagConfig.LogToFile = ctx.Bool("log_to_file")
 		}
 		if ctx.IsSet("input_dir_path") {
 			inputDirpath := ctx.String("input_dir_path")
@@ -63,7 +72,7 @@ var diagCMD = &cli.Command{
 		}
 		GlobalDiagConfig.Complete()
 		if !GlobalDiagConfig.Validate() {
-			GlobalCMDLogger.Errorf(false, "validate diag config failed.\n")
+			GlobalCMDLogger.Errorf("validate diag config failed.\n")
 			return errorx.ErrConfigInvalid
 		}
 		diag.Run(GlobalDiagConfig)

@@ -24,12 +24,12 @@ var infoCMD = &cli.Command{
 		var err error
 
 		if !ctx.IsSet("config") {
-			GlobalCMDLogger.Errorf(false, "no input info config.\n")
+			GlobalCMDLogger.Errorf("no input info config.\n")
 			return errorx.ErrNoInputConfig
 		}
 		GlobalInfoConfig, err = config.NewInfoConfig(configPath, utils.GetConfigType(configPath))
 		if err != nil {
-			GlobalCMDLogger.Errorf(false, "has error to create info config.\n")
+			GlobalCMDLogger.Errorf("has error to create info config.\n")
 			return errorx.ErrConfigInvalid
 		}
 		info.Run(GlobalInfoConfig)

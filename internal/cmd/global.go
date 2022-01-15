@@ -23,7 +23,7 @@ var (
 	GlobalDiagConfig *config.DiagConfig
 	GlobalPackConfig *config.PackConfig
 
-	GlobalCMDLogger = logger.GetLogger("global_cli", "")
+	GlobalCMDLogger = logger.GetLogger("global_cli", "", false)
 
 	GlobalOptions = []cli.Flag{
 		// set the global option by &cli.XXXFlag{}

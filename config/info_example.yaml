@@ -4,6 +4,7 @@ version: 3.0
 # the common config will apply to each specific config
 common:
   outputDirPath:
+  logToFile:
   duration:
   period:
   options:
@@ -29,6 +30,7 @@ node:
         http_2_port: nebula graph http2 port
 #    # the following config will overwrite the common config
 #    outputDirPath:
+#    logToFile:
 #    duration:
 #    period:
 #    options:

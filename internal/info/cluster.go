@@ -2,6 +2,7 @@ package info
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
@@ -9,6 +10,7 @@ import (
 )
 
 func Run(conf *config.InfoConfig) {
+	log.Println(conf)
 	// TODO fix the cancel bugs
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -16,8 +18,7 @@ func Run(conf *config.InfoConfig) {
 	for name := range conf.Node {
 		go func(name string) {
 			nodeConfig := conf.Node[name]
-			var _logger logger.Logger
-			_logger = logger.GetLogger(name, nodeConfig.OutputDirPath)
+			_logger := logger.GetLogger(name, nodeConfig.OutputDirPath, nodeConfig.LogToFile)
 			// the conf has been verified, so don't need to handle error
 			d, _ := time.ParseDuration(nodeConfig.Duration)
 			if nodeConfig.Duration == "-1" {

@@ -43,8 +43,8 @@ var packCMD = &cli.Command{
 			configPath := ctx.String("config")
 			GlobalPackConfig, err = config.NewPackConfig(configPath, utils.GetConfigType(configPath))
 			if err != nil {
-				GlobalCMDLogger.Errorf(false, "has error to create pack config.\n")
-				GlobalCMDLogger.Infof(false, "now auto complete the pack config.\n")
+				GlobalCMDLogger.Errorf("has error to create pack config.\n")
+				GlobalCMDLogger.Infof("now auto complete the pack config.\n")
 			}
 		}
 		if GlobalPackConfig == nil {
@@ -68,7 +68,7 @@ var packCMD = &cli.Command{
 
 		GlobalPackConfig.Complete()
 		if !GlobalPackConfig.Validate() {
-			GlobalCMDLogger.Errorf(false, "validate pack config failed.\n")
+			GlobalCMDLogger.Errorf("validate pack config failed.\n")
 			return errorx.ErrConfigInvalid
 		}
 		pack.Run(GlobalPackConfig)
