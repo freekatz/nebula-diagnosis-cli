@@ -1,13 +1,14 @@
 package cmd
 
 import (
+	"github.com/1uvu/nebula-diagnosis-cli/internal/pack"
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/utils"
 	"github.com/urfave/cli/v2"
 )
 
-var packCmd = &cli.Command{
+var packCMD = &cli.Command{
 	Name:  "pack",
 	Usage: "pack the collected data",
 	Flags: []cli.Flag{
@@ -42,8 +43,8 @@ var packCmd = &cli.Command{
 			configPath := ctx.String("config")
 			GlobalPackConfig, err = config.NewPackConfig(configPath, utils.GetConfigType(configPath))
 			if err != nil {
-				GlobalCMDLogger.Errorf("has error to create pack config.\n")
-				GlobalCMDLogger.Infof("now auto complete the pack config.\n")
+				GlobalCMDLogger.Errorf(false, "has error to create pack config.\n")
+				GlobalCMDLogger.Infof(false, "now auto complete the pack config.\n")
 			}
 		}
 		if GlobalPackConfig == nil {
@@ -67,11 +68,10 @@ var packCmd = &cli.Command{
 
 		GlobalPackConfig.Complete()
 		if !GlobalPackConfig.Validate() {
-			GlobalCMDLogger.Errorf("validate pack config failed.\n")
+			GlobalCMDLogger.Errorf(false, "validate pack config failed.\n")
 			return errorx.ErrConfigInvalid
 		}
-		//pack.Run(GlobalPackConfig)
-		GlobalCMDLogger.Info(GlobalPackConfig)
+		pack.Run(GlobalPackConfig)
 		return nil
 	},
 }

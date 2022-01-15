@@ -3,14 +3,15 @@ package info
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+	"path/filepath"
+	"time"
+
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/info/physical"
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/info/service"
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/logger"
-	"os"
-	"path/filepath"
-	"time"
 )
 
 // NewAllInfo Save the last collected information
@@ -29,7 +30,7 @@ func fetchAndSaveInfo(nodeConfig *config.NodeConfig, option config.InfoOption, d
 	NewAllInfo = *allInfo
 	marshal, err := json.Marshal(allInfo)
 	if err != nil {
-		defaultLogger.Errorf("save json data failed: %s\n", err.Error())
+		defaultLogger.Errorf(true, "save json data failed: %s\n", err.Error())
 	}
 	dir := filepath.Join(nodeConfig.OutputDirPath, nodeConfig.SSH.Address)
 	p, _ := filepath.Abs(dir)
@@ -45,22 +46,22 @@ func fetchAndSaveInfo(nodeConfig *config.NodeConfig, option config.InfoOption, d
 	if os.IsNotExist(err) {
 		file, err := os.OpenFile(filePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
-			defaultLogger.Fatal(err)
+			defaultLogger.Fatal(true, err)
 		}
 		_, err = file.Write(marshal)
 		_, err = file.Write([]byte("\n"))
 		if err != nil {
-			defaultLogger.Errorf("save json data failed: %s\n", err.Error())
+			defaultLogger.Errorf(true, "save json data failed: %s\n", err.Error())
 		}
 	} else {
 		file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
-			defaultLogger.Fatal(err)
+			defaultLogger.Fatal(true, err)
 		}
 		_, err = file.Write(marshal)
 		_, err = file.Write([]byte("\n"))
 		if err != nil {
-			defaultLogger.Errorf("save json data failed: %s\n", err.Error())
+			defaultLogger.Errorf(true, "save json data failed: %s\n", err.Error())
 		}
 	}
 }
@@ -70,23 +71,23 @@ func fetchInfo(nodeInfo *config.NodeConfig, option config.InfoOption, defaultLog
 
 	phyInfo, err := fetchPhyInfo(option, nodeInfo.SSH)
 	if err != nil {
-		defaultLogger.Errorf("fetch phy info failed: %s\n", err.Error())
+		defaultLogger.Errorf(true, "fetch phy info failed: %s\n", err.Error())
 	} else {
 		// defaultLogger.Info(phyInfo.String())
 		if phyInfo != nil {
 			allInfo.PhyInfo = phyInfo
-			defaultLogger.Infof("%s physical info: %+v\n", nodeInfo.SSH.Address, phyInfo)
+			defaultLogger.Infof(true, "%s physical info: %+v\n", nodeInfo.SSH.Address, phyInfo)
 		}
 	}
 
 	statusInfos, err := fetchStatusInfo(option, nodeInfo, defaultLogger)
 	if err != nil {
-		defaultLogger.Errorf("fetch services status failed: %s\n", err.Error())
+		defaultLogger.Errorf(true, "fetch services status failed: %s\n", err.Error())
 	} else {
 		// defaultLogger.Info(phyInfo.String())
 		if statusInfos != nil {
 			for name, statusInfo := range statusInfos {
-				defaultLogger.Infof("%s status info: %+v\n", name, statusInfo)
+				defaultLogger.Infof(true, "%s status info: %+v\n", name, statusInfo)
 			}
 			allInfo.StatusInfo = statusInfos
 		}
@@ -94,12 +95,12 @@ func fetchInfo(nodeInfo *config.NodeConfig, option config.InfoOption, defaultLog
 
 	metricsInfos, err := fetchMetricsInfo(option, nodeInfo, defaultLogger)
 	if err != nil {
-		defaultLogger.Errorf("fetch services metrics failed: %s\n", err.Error())
+		defaultLogger.Errorf(true, "fetch services metrics failed: %s\n", err.Error())
 	} else {
 		// defaultLogger.Info(phyInfo.String())
 		if metricsInfos != nil {
 			for name, metricsInfo := range metricsInfos {
-				defaultLogger.Infof("%s metrics info: %+v\n", name, metricsInfo)
+				defaultLogger.Infof(true, "%s metrics info: %+v\n", name, metricsInfo)
 			}
 			allInfo.MetricsInfo = metricsInfos
 		}
@@ -107,23 +108,23 @@ func fetchInfo(nodeInfo *config.NodeConfig, option config.InfoOption, defaultLog
 
 	flagsInfos, err := fetchFlagsInfo(option, nodeInfo, defaultLogger)
 	if err != nil {
-		defaultLogger.Errorf("fetch services flags failed: %s", err.Error())
+		defaultLogger.Errorf(true, "fetch services flags failed: %s", err.Error())
 	} else {
 		// defaultLogger.Info(phyInfo.String())
 		if flagsInfos != nil {
 			for name, flagsInfo := range flagsInfos {
-				defaultLogger.Infof("%s flags info: %+v\n", name, flagsInfo)
+				defaultLogger.Infof(true, "%s flags info: %+v\n", name, flagsInfo)
 			}
 			allInfo.FlagsInfo = flagsInfos
 		}
 	}
 
 	err = packageLogs(nodeInfo, option, defaultLogger)
-	defaultLogger.Info("packaging service logs...\n")
+	defaultLogger.Info(true, "packaging service logs...\n")
 	if err != nil {
-		defaultLogger.Errorf("service package: failed, %s\n", err.Error())
+		defaultLogger.Errorf(true, "service package: failed, %s\n", err.Error())
 	} else {
-		defaultLogger.Info(nodeInfo.SSH.Address, " service package: success!\n")
+		defaultLogger.Info(true, nodeInfo.SSH.Address, " service package: success!\n")
 	}
 
 	return allInfo
@@ -143,7 +144,7 @@ func fetchStatusInfo(option config.InfoOption, nodeConfig *config.NodeConfig, de
 		for name, serviceConfig := range serviceConfigs {
 			statusInfo, err := service.GetStatusInfo(nodeConfig, serviceConfig)
 			if err != nil {
-				defaultLogger.Errorf("service %s fetch status info failed: %s, \n", name, err.Error())
+				defaultLogger.Errorf(true, "service %s fetch status info failed: %s, \n", name, err.Error())
 				continue
 			}
 			serviceStatusInfos[name] = statusInfo
@@ -163,7 +164,7 @@ func fetchFlagsInfo(option config.InfoOption, nodeConfig *config.NodeConfig, def
 		for name, serviceConfig := range serviceConfigs {
 			flagsInfo, err := service.GetFlagsInfo(nodeConfig, serviceConfig)
 			if err != nil {
-				defaultLogger.Errorf("service %s fetch flags info failed: %s, \n", name, err.Error())
+				defaultLogger.Errorf(true, "service %s fetch flags info failed: %s, \n", name, err.Error())
 				continue
 			}
 			serviceFlagsInfos[name] = flagsInfo
@@ -183,7 +184,7 @@ func fetchMetricsInfo(option config.InfoOption, nodeConfig *config.NodeConfig, d
 		for name, serviceConfig := range serviceConfigs {
 			flagsInfo, err := service.GetMetricsInfo(nodeConfig, serviceConfig)
 			if err != nil {
-				defaultLogger.Errorf("service %s fetch metrics info failed: %s, \n", name, err.Error())
+				defaultLogger.Errorf(true, "service %s fetch metrics info failed: %s, \n", name, err.Error())
 				continue
 			}
 			serviceMetricsInfos[name] = flagsInfo
@@ -203,7 +204,7 @@ func packageLogs(nodeConf *config.NodeConfig, option config.InfoOption, defaultL
 		for _, serviceConfig := range serviceConfigs {
 			err = service.GetLogs(nodeConf, serviceConfig)
 			if err != nil {
-				defaultLogger.Errorf("service %s package logs failed: %s, stop package logs!", err.Error())
+				defaultLogger.Errorf(true, "service %s package logs failed: %s, stop package logs!", err.Error())
 			}
 		}
 	}

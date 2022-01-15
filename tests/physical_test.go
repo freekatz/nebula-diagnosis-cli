@@ -1,10 +1,11 @@
 package tests
 
 import (
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/info/physical"
 	"log"
 	"testing"
+
+	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
+	"github.com/1uvu/nebula-diagnosis-cli/pkg/info/physical"
 )
 
 func TestGetInfo(t *testing.T) {

@@ -1,8 +1,9 @@
 package tests
 
 import (
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/packer"
 	"testing"
+
+	"github.com/1uvu/nebula-diagnosis-cli/pkg/packer"
 )
 
 func TestPack(t *testing.T) {

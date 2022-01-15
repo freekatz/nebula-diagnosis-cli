@@ -3,14 +3,15 @@ package packer
 import (
 	"archive/tar"
 	"compress/gzip"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/utils"
 	"io"
 	"io/fs"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
+	"github.com/1uvu/nebula-diagnosis-cli/pkg/utils"
 )
 
 type TgzPacker struct {

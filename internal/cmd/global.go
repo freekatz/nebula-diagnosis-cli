@@ -14,14 +14,16 @@ const (
 
 var (
 	Commands = []*cli.Command{
-		infoCmd,
-		packCmd,
+		infoCMD,
+		diagCMD,
+		packCMD,
 	}
 
 	GlobalInfoConfig *config.InfoConfig
+	GlobalDiagConfig *config.DiagConfig
 	GlobalPackConfig *config.PackConfig
 
-	GlobalCMDLogger = logger.GetCmdLogger("global_cli")
+	GlobalCMDLogger = logger.GetLogger("global_cli", "")
 
 	GlobalOptions = []cli.Flag{
 		// set the global option by &cli.XXXFlag{}

@@ -115,6 +115,16 @@ func (c *SFTPClient) GetFilesInRemoteDir(remoteDir string, localDir string) erro
 	return nil
 }
 
+func (c *SFTPClient) UploadFile() bool {
+
+	return false
+}
+
+func (c *SFTPClient) UploadFileAsync(ch chan<- bool) {
+	ok := c.UploadFile()
+	ch <- ok
+}
+
 func (c *SFTPClient) Close() {
 	sftpMux.Lock()
 	defer sftpMux.Unlock()

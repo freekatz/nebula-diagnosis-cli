@@ -1,13 +1,14 @@
 package cmd
 
 import (
+	"github.com/1uvu/nebula-diagnosis-cli/internal/info"
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/utils"
 	"github.com/urfave/cli/v2"
 )
 
-var infoCmd = &cli.Command{
+var infoCMD = &cli.Command{
 	Name:  "info",
 	Usage: "fetch the nebula graph infos",
 	Flags: []cli.Flag{
@@ -23,16 +24,15 @@ var infoCmd = &cli.Command{
 		var err error
 
 		if !ctx.IsSet("config") {
-			GlobalCMDLogger.Errorf("no input info config.\n")
+			GlobalCMDLogger.Errorf(false, "no input info config.\n")
 			return errorx.ErrNoInputConfig
 		}
 		GlobalInfoConfig, err = config.NewInfoConfig(configPath, utils.GetConfigType(configPath))
 		if err != nil {
-			GlobalCMDLogger.Errorf("has error to create info config.\n")
+			GlobalCMDLogger.Errorf(false, "has error to create info config.\n")
 			return errorx.ErrConfigInvalid
 		}
-		//info.Run(GlobalInfoConfig)
-		GlobalCMDLogger.Info(GlobalInfoConfig)
+		info.Run(GlobalInfoConfig)
 		return nil
 	},
 }

@@ -1,17 +1,18 @@
 package config
 
 import (
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
-	"github.com/spf13/viper"
 	"path/filepath"
 	"strings"
+
+	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
+	"github.com/spf13/viper"
 )
 
 type PackConfig struct {
-	OutputDirPath string    `mapstructure:"outputDirPath,omitempty"` // output location
-	TarFilepath   string    `mapstructure:"tarFilepath"`             // input tar filepath
-	TarFilename   string    `mapstructure:"tarFilename"`             // output tar filename, will output into OutputDirPath
-	SSH           SSHConfig `mapstructure:"ssh"`                     // ssh config for upload
+	OutputDirPath string     `mapstructure:"outputDirPath,omitempty"` // output location
+	TarFilepath   string     `mapstructure:"tarFilepath"`             // input tar filepath
+	TarFilename   string     `mapstructure:"tarFilename"`             // output tar filename, will output into OutputDirPath
+	SSH           *SSHConfig `mapstructure:"ssh"`                     // ssh config for upload
 }
 
 // Complete TODO modify the output dir path

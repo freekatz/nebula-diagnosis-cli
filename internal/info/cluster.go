@@ -2,9 +2,10 @@ package info
 
 import (
 	"context"
+	"time"
+
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/logger"
-	"time"
 )
 
 func Run(conf *config.InfoConfig) {
@@ -13,11 +14,10 @@ func Run(conf *config.InfoConfig) {
 	defer cancel()
 
 	for name := range conf.Node {
-		// FileLogger
 		go func(name string) {
 			nodeConfig := conf.Node[name]
 			var _logger logger.Logger
-			_logger = logger.GetFileLogger(name, nodeConfig.OutputDirPath)
+			_logger = logger.GetLogger(name, nodeConfig.OutputDirPath)
 			// the conf has been verified, so don't need to handle error
 			d, _ := time.ParseDuration(nodeConfig.Duration)
 			if nodeConfig.Duration == "-1" {

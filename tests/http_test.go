@@ -2,9 +2,10 @@ package tests
 
 import (
 	"fmt"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/remote"
 	"log"
 	"testing"
+
+	"github.com/1uvu/nebula-diagnosis-cli/pkg/remote"
 )
 
 func TestGetNebulaMetrics(t *testing.T) {
