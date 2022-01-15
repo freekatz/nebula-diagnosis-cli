@@ -8,8 +8,7 @@ diag-cli [sub-commands] -C --config [filepath]
 
 diag-cli diag  -I --input_dirPath [dirPath] -O --output_dirPath [dirPath] --option [", , , , "]
 
+// -C: upload ssh config, -I input files, -O output tar files
 diag-cli pack  -C --config [filepath] -I --input_dirPath [dirPath] -O --output_dirPath [dirPath]
-
-diag-cli unpack  -I --input_dirPath [dirPath] -O --output_dirPath [dirPath]
 
 config.yaml:

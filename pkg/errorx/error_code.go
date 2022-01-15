@@ -61,10 +61,13 @@ func (e *errorX) GetErrorMsg() string {
 	return e.errorMsg
 }
 
+/*
+	ErrorCode I: Info, W: Warn, E: Error
+*/
 const (
-	ErrorCode_SUCCEEDED  ErrorCode = 0
-	ErrorCode_E_CLI      ErrorCode = -1
-	ErrorCode_E_RUNTIME  ErrorCode = -2
-	ErrorCode_E_INTERNAL ErrorCode = -3
-	ErrorCode_E_FILE     ErrorCode = -4
+	ErrorCode_I_SUCCEEDED ErrorCode = 0
+	ErrorCode_W_CLI       ErrorCode = -1
+	ErrorCode_E_RUNTIME   ErrorCode = -2
+	ErrorCode_E_INTERNAL  ErrorCode = -3
+	ErrorCode_E_FILE      ErrorCode = -4
 )

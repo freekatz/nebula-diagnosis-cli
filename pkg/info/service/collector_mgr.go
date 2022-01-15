@@ -1,9 +1,10 @@
 package service
 
 import (
+	"sync"
+
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/remote"
-	"sync"
 )
 
 var collectors = make(map[string]*NebulaCollector)

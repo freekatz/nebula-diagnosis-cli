@@ -1,7 +1,6 @@
 package remote
 
 import (
-	"golang.org/x/crypto/ssh"
 	"io"
 	"os"
 	"path/filepath"
@@ -9,6 +8,7 @@ import (
 
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
 	"github.com/pkg/sftp"
+	"golang.org/x/crypto/ssh"
 )
 
 type SFTPClient struct {

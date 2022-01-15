@@ -1,11 +1,12 @@
 package service
 
 import (
+	"path/filepath"
+	"strings"
+
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/remote"
-	"path/filepath"
-	"strings"
 )
 
 type NebulaCollector struct {
