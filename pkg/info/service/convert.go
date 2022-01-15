@@ -3,9 +3,9 @@ package service
 import "strings"
 
 type QueryValue struct {
-	Value  string
+	Value string `json:"value"`
 	// like {space=nba}
-	Labels map[string]string
+	Labels map[string]string `json:"labels"`
 }
 
 func ConvertToMap(metrics []string) map[string]QueryValue {

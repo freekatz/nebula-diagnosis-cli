@@ -89,8 +89,8 @@ func (c *SFTPClient) GetFilesInRemoteDir(remoteDir string, localDir string) erro
 		if fileInfo.IsDir() {
 			dirName := fileInfo.Name()
 			// remoteDir is under the Linux path by default
-			remoteSubDir := remoteDir + "/" +dirName
-			localSubDir :=  filepath.Join(localDir, dirName)
+			remoteSubDir := remoteDir + "/" + dirName
+			localSubDir := filepath.Join(localDir, dirName)
 			c.GetFilesInRemoteDir(remoteSubDir, localSubDir)
 		}
 		srcPath := remoteDir + "/" + fileInfo.Name()
