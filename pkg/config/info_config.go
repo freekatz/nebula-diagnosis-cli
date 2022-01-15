@@ -50,6 +50,7 @@ const (
 	Metrics  InfoOption = "metrics"
 	Physical InfoOption = "physical"
 	Stats    InfoOption = "stats"
+	Logs	 InfoOption = "logs"
 	AllInfo  InfoOption = "all"
 	NoInfo   InfoOption = "no"
 )
