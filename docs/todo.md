@@ -2,7 +2,7 @@
 - [x] config
 - [ ] internal
   - [x] cmd
-  - [x] info
+  - [ ] info: bug fix and tests
   - [ ] diag
   - [x] pack
 - [x] pkg
@@ -15,3 +15,17 @@
   - [x] remote
   - [x] utils
 - [x] tests
+- [ ] others
+  - [ ] docs
+  - [ ] scripts
+  - [ ] Makefile
+  - [ ] README.md
+  - [ ] CHANGELOG.md
+  - [ ] LICENSE.md
+  - [ ] logger text format and standards
+  - [ ] code structures, TODO and refactor
+  - [ ] cli help text
+  - [ ] info output format
+  - [ ] more infos support
+  - [ ] return errors format and standards
+  - [ ] ...
