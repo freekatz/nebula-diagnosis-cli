@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -35,41 +36,42 @@ type (
 // defaultLogger impl the default logger by logrus
 type defaultLogger struct {
 	logr *logrus.Logger
+	name string
 }
 
 func (d *defaultLogger) Info(msg ...interface{}) {
-	d.info(fmt.Sprint(msg...))
+	d.info(strings.Join([]string{d.name, fmt.Sprint(msg...)}, ": "))
 }
 func (d *defaultLogger) Infof(format string, msg ...interface{}) {
-	d.info(fmt.Sprintf(format, msg...))
+	d.info(strings.Join([]string{d.name, fmt.Sprintf(format, msg...)}, ": "))
 }
 func (d *defaultLogger) info(msg string) {
 	d.logr.Info(msg)
 }
 func (d *defaultLogger) Warn(msg ...interface{}) {
-	d.warn(fmt.Sprint(msg...))
+	d.warn(strings.Join([]string{d.name, fmt.Sprint(msg...)}, ": "))
 }
 func (d *defaultLogger) Warnf(format string, msg ...interface{}) {
-	d.warn(fmt.Sprintf(format, msg...))
+	d.warn(strings.Join([]string{d.name, fmt.Sprintf(format, msg...)}, ": "))
 }
 
 func (d *defaultLogger) warn(msg string) {
 	d.logr.Warn(msg)
 }
 func (d *defaultLogger) Error(msg ...interface{}) {
-	d.error(fmt.Sprint(msg...))
+	d.error(strings.Join([]string{d.name, fmt.Sprint(msg...)}, ": "))
 }
 func (d *defaultLogger) Errorf(format string, msg ...interface{}) {
-	d.error(fmt.Sprintf(format, msg...))
+	d.error(strings.Join([]string{d.name, fmt.Sprintf(format, msg...)}, ": "))
 }
 func (d *defaultLogger) error(msg string) {
 	d.logr.Error(msg)
 }
 func (d *defaultLogger) Fatal(msg ...interface{}) {
-	d.fatal(fmt.Sprint(msg...))
+	d.fatal(strings.Join([]string{d.name, fmt.Sprint(msg...)}, ": "))
 }
 func (d *defaultLogger) Fatalf(format string, msg ...interface{}) {
-	d.fatal(fmt.Sprintf(format, msg...))
+	d.fatal(strings.Join([]string{d.name, fmt.Sprintf(format, msg...)}, ": "))
 }
 func (d *defaultLogger) fatal(msg string) {
 	d.logr.Fatal(msg)
@@ -98,6 +100,7 @@ func initCMDLogger(name string) {
 
 	cmdLogger := &CMDLogger{&defaultLogger{}}
 	cmdLogger.logr = logr
+	cmdLogger.name = name
 	cmdLoggers[name] = cmdLogger
 }
 
@@ -138,5 +141,6 @@ func initFileLogger(name string, dirPath string) {
 	logr.SetOutput(writer)
 	fileLogger := &FileLogger{&defaultLogger{}}
 	fileLogger.logr = logr
+	fileLogger.name = name
 	fileLoggers[name] = fileLogger
 }

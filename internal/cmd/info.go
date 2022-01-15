@@ -5,7 +5,6 @@ import (
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/utils"
 	"github.com/urfave/cli/v2"
-	"log"
 )
 
 var infoCmd = &cli.Command{
@@ -22,17 +21,18 @@ var infoCmd = &cli.Command{
 	Action: func(ctx *cli.Context) error {
 		configPath := ctx.String("config")
 		var err error
-		if configPath != "" {
-			GlobalInfoConfig, err = config.NewInfoConfig(configPath, utils.GetConfigType(configPath))
-			if err != nil {
-				return err
-			}
+
+		if !ctx.IsSet("config") {
+			GlobalCMDLogger.Errorf("no input info config.\n")
+			return errorx.ErrNoInputConfig
 		}
-		if GlobalInfoConfig == nil {
-			return errorx.ErrNoConfig
+		GlobalInfoConfig, err = config.NewInfoConfig(configPath, utils.GetConfigType(configPath))
+		if err != nil {
+			GlobalCMDLogger.Errorf("has error to create info config.\n")
+			return errorx.ErrConfigInvalid
 		}
 		//info.Run(GlobalInfoConfig)
-		log.Println(GlobalInfoConfig)
+		GlobalCMDLogger.Info(GlobalInfoConfig)
 		return nil
 	},
 }

@@ -50,13 +50,3 @@ func TestNewPackConfig(t *testing.T) {
 
 	log.Println(conf)
 }
-
-func TestNewUnPackConfig(t *testing.T) {
-	conf, err := config.NewUnPackConfig("./in", "./out")
-	if err != nil {
-		t.Error(err.Error())
-		return
-	}
-
-	log.Println(conf)
-}

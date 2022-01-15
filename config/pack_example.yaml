@@ -2,7 +2,8 @@
 version: 3.0
 
 outputDirPath:
-inputDirPath: data input dir
+tarFilepath: data input path
+tarFilename:
 ssh:
   address: ip
   port: ssh port

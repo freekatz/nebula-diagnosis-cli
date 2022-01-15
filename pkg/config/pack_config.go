@@ -3,11 +3,14 @@ package config
 import (
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
 	"github.com/spf13/viper"
+	"path/filepath"
+	"strings"
 )
 
 type PackConfig struct {
 	OutputDirPath string    `mapstructure:"outputDirPath,omitempty"` // output location
-	InputDirPath  string    `mapstructure:"inputDirPath"`            // input location
+	TarFilepath   string    `mapstructure:"tarFilepath"`             // input tar filepath
+	TarFilename   string    `mapstructure:"tarFilename"`             // output tar filename, will output into OutputDirPath
 	SSH           SSHConfig `mapstructure:"ssh"`                     // ssh config for upload
 }
 
@@ -16,10 +19,15 @@ func (c *PackConfig) Complete() {
 	if c.OutputDirPath == "" {
 		c.OutputDirPath = defaultOutputDirPath
 	}
+	if c.TarFilename == "" {
+		c.TarFilename = strings.Join([]string{filepath.Base(c.TarFilepath), ".tar.gz"}, "")
+	} else if !strings.HasSuffix(c.TarFilename, ".tar") || !strings.HasSuffix(c.TarFilename, ".tar.gz") {
+		c.TarFilename = strings.Join([]string{c.TarFilename, ".tar.gz"}, "")
+	}
 }
 
 func (c *PackConfig) Validate() bool {
-	return c.InputDirPath != ""
+	return c.TarFilepath != ""
 }
 
 func NewPackConfig(confPath string, configType string) (*PackConfig, error) {

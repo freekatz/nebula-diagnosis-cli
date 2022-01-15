@@ -1,0 +1,15 @@
+- [x] cmd
+- [x] config
+- [ ] internal
+  - [x] cmd
+  - [ ] info
+  - [ ] pack
+- [x] pkg
+  - [x] config
+  - [x] errorx
+  - [x] info
+  - [x] logger
+  - [x] packer
+  - [x] remote
+  - [x] utils
+- [x] tests

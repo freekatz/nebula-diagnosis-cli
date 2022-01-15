@@ -17,7 +17,7 @@ type (
 		OutputDirPath string       `mapstructure:"outputDirPath"`      // output location
 		Duration      string       `mapstructure:"duration,omitempty"` // duration of info fetching, default is 0
 		Period        string       `mapstructure:"period,omitempty"`   // period of info fetching, default is 0
-		Options       []InfoOption `mapstructure:"option,omitempty"`   // info to fetch, default is all
+		Options       []InfoOption `mapstructure:"options,omitempty"`  // info to fetch, default is all
 	}
 
 	NodeConfig struct {
@@ -50,7 +50,7 @@ const (
 	Metrics  InfoOption = "metrics"
 	Physical InfoOption = "physical"
 	Stats    InfoOption = "stats"
-	Logs	 InfoOption = "logs"
+	Logs     InfoOption = "logs"
 	AllInfo  InfoOption = "all"
 	NoInfo   InfoOption = "no"
 )

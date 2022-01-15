@@ -12,38 +12,23 @@ func Run(conf *config.InfoConfig) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	commonInfo := conf.Common
-	for name, nodeInfo := range conf.Node {
+	for name := range conf.Node {
 		// FileLogger
-		go func() {
+		go func(name string) {
+			nodeConfig := conf.Node[name]
 			var _logger logger.Logger
-			_logger = logger.GetFileLogger(name, nodeInfo.OutputDirPath)
+			_logger = logger.GetFileLogger(name, nodeConfig.OutputDirPath)
 			// the conf has been verified, so don't need to handle error
-			d, _ := time.ParseDuration(nodeInfo.Duration)
-			if commonInfo.Duration == "-1" {
-				runWithInfinity(commonInfo, nodeInfo, _logger)
+			d, _ := time.ParseDuration(nodeConfig.Duration)
+			if nodeConfig.Duration == "-1" {
+				runWithInfinity(nodeConfig, _logger)
 			} else if d == 0 {
-				run(commonInfo, nodeInfo, _logger)
+				run(nodeConfig, _logger)
 				cancel() // TODO temp code
 			} else {
-				runWithDuration(commonInfo, nodeInfo, _logger)
+				runWithDuration(nodeConfig, _logger)
 			}
-		}()
-		// CmdLogger
-		//go func() {
-		//	var _logger logger.Logger
-		//	_logger = logger.GetCmdLogger(name)
-		//	// the conf has been verified, so don't need to handle error
-		//	d, _ := time.ParseDuration(commonInfo.Duration)
-		//	if commonInfo.Duration == "-1" {
-		//		runWithInfinity(commonInfo, nodeInfo, _logger)
-		//	} else if d == 0 {
-		//		run(commonInfo, nodeInfo, _logger)
-		//		cancel() // TODO temp code
-		//	} else {
-		//		runWithDuration(commonInfo, nodeInfo, _logger)
-		//	}
-		//}()
+		}(name)
 	}
 
 	for {
@@ -55,28 +40,28 @@ func Run(conf *config.InfoConfig) {
 
 }
 
-func run(commonConf *config.CommonConfig, nodeInfo *config.NodeConfig, defaultLogger logger.Logger) {
-	for _, option := range commonConf.Options {
+func run(nodeConfig *config.NodeConfig, defaultLogger logger.Logger) {
+	for _, option := range nodeConfig.Options {
 		//fetchInfo(conf, option, defaultLogger)
-		fetchAndSaveInfo(nodeInfo, option, defaultLogger)
+		fetchAndSaveInfo(nodeConfig, option, defaultLogger)
 	}
 }
 
-func runWithInfinity(commonConf *config.CommonConfig, nodeInfo *config.NodeConfig, defaultLogger logger.Logger) {
-	p, _ := time.ParseDuration(commonConf.Period)
+func runWithInfinity(nodeConfig *config.NodeConfig, defaultLogger logger.Logger) {
+	p, _ := time.ParseDuration(nodeConfig.Period)
 	ticker := time.NewTicker(p)
 	for {
 		select {
 		case <-ticker.C:
-			run(commonConf, nodeInfo, defaultLogger)
+			run(nodeConfig, defaultLogger)
 		default:
 
 		}
 	}
 }
 
-func runWithDuration(commonConf *config.CommonConfig, nodeInfo *config.NodeConfig, defaultLogger logger.Logger) {
-	p, _ := time.ParseDuration(commonConf.Period)
+func runWithDuration(nodeConfig *config.NodeConfig, defaultLogger logger.Logger) {
+	p, _ := time.ParseDuration(nodeConfig.Period)
 	ticker := time.NewTicker(p)
 	ch := make(chan bool)
 	go func(ticker *time.Ticker) {
@@ -84,7 +69,7 @@ func runWithDuration(commonConf *config.CommonConfig, nodeInfo *config.NodeConfi
 		for {
 			select {
 			case <-ticker.C:
-				run(commonConf, nodeInfo, defaultLogger)
+				run(nodeConfig, defaultLogger)
 			case stop := <-ch:
 				if stop {
 					return
@@ -95,7 +80,7 @@ func runWithDuration(commonConf *config.CommonConfig, nodeInfo *config.NodeConfi
 		}
 	}(ticker)
 
-	d, _ := time.ParseDuration(commonConf.Duration)
+	d, _ := time.ParseDuration(nodeConfig.Duration)
 	time.Sleep(d)
 	ch <- true
 	close(ch)

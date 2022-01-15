@@ -24,14 +24,14 @@ type AllInfo struct {
 	FlagsInfo   map[string]*service.NebulaFlagsInfo   `json:"flags_info,omitempty"`
 }
 
-func fetchAndSaveInfo(commonConf *config.CommonConfig, nodeInfo *config.NodeConfig, option config.InfoOption, defaultLogger logger.Logger) {
-	allInfo := fetchInfo(nodeInfo, option, defaultLogger)
+func fetchAndSaveInfo(nodeConfig *config.NodeConfig, option config.InfoOption, defaultLogger logger.Logger) {
+	allInfo := fetchInfo(nodeConfig, option, defaultLogger)
 	NewAllInfo = *allInfo
 	marshal, err := json.Marshal(allInfo)
 	if err != nil {
 		defaultLogger.Errorf("save json data failed: %s\n", err.Error())
 	}
-	dir := filepath.Join(commonConf.OutputDirPath, nodeInfo.SSH.Address)
+	dir := filepath.Join(nodeConfig.OutputDirPath, nodeConfig.SSH.Address)
 	p, _ := filepath.Abs(dir)
 	_, err = os.Stat(p)
 	if os.IsNotExist(err) {
@@ -65,7 +65,7 @@ func fetchAndSaveInfo(commonConf *config.CommonConfig, nodeInfo *config.NodeConf
 	}
 }
 
-func fetchInfo(nodeInfo *config.NodeConfig, option config.InfoOption, defaultLogger logger.Logger) (*AllInfo) {
+func fetchInfo(nodeInfo *config.NodeConfig, option config.InfoOption, defaultLogger logger.Logger) *AllInfo {
 	allInfo := new(AllInfo)
 
 	phyInfo, err := fetchPhyInfo(option, nodeInfo.SSH)
@@ -212,4 +212,3 @@ func packageLogs(nodeConf *config.NodeConfig, option config.InfoOption, defaultL
 	}
 	return nil
 }
-
