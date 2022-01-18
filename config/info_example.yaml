@@ -23,7 +23,6 @@ node:
     services:
       graph1:
         type: graphService
-        deploy_dir: deploy_dir
         runtime_dir: graphd dir
         port: nebula graph port
         http_port: nebula graph http port
