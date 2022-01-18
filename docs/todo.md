@@ -2,7 +2,7 @@
 - [x] config
 - [ ] internal
   - [x] cmd
-  - [ ] info: bug fix and tests
+  - [x] info: bug fix and tests
   - [ ] diag
   - [x] pack
 - [x] pkg

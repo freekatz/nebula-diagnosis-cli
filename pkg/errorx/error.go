@@ -13,7 +13,7 @@ var (
 	/*
 		ErrorX runtime errors
 	*/
-	//Err
+	ErrPackageLogsFailed = errors.New("package logs failed")
 
 	/*
 		ErrorX internal errors

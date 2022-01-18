@@ -79,6 +79,9 @@ func (c *NebulaCollector) CollectFlagsInfo() (NebulaFlagsInfo, error) {
 
 func (c *NebulaCollector) PackageLogs() error {
 	remoteLogDir := ""
+	if c.NebulaFlagsInfo == nil {
+		return errorx.ErrPackageLogsFailed
+	}
 	if queryValue, ok := c.NebulaFlagsInfo.Flags["log_dir"]; ok {
 		remoteLogDir = queryValue.Value
 	}
