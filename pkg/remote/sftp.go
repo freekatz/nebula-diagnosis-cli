@@ -1,8 +1,12 @@
 package remote
 
 import (
+	"fmt"
 	"io"
+	"io/ioutil"
+	"log"
 	"os"
+	"path"
 	"path/filepath"
 	"sync"
 
@@ -55,17 +59,19 @@ func newSFTPClient(sshClient *ssh.Client) (*SFTPClient, error) {
 	return &SFTPClient{Client: sftpClient}, nil
 }
 
-func (c *SFTPClient) GetFileInRemotePath(remotePath string, localPath string) error {
+func (c *SFTPClient) DownloadFile(remotePath string, localPath string) error {
 	src, err := c.Client.Open(remotePath)
 	if err != nil {
 		return err
 	}
 	defer src.Close()
+
 	dst, err := os.OpenFile(localPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
 		return err
 	}
 	defer dst.Close()
+
 	_, err = io.Copy(dst, src)
 	if err != nil {
 		return err
@@ -73,7 +79,7 @@ func (c *SFTPClient) GetFileInRemotePath(remotePath string, localPath string) er
 	return nil
 }
 
-func (c *SFTPClient) GetFilesInRemoteDir(remoteDir string, localDir string) error {
+func (c *SFTPClient) DownloadDir(remoteDir string, localDir string) error {
 	p, _ := filepath.Abs(localDir)
 	_, err := os.Stat(p)
 	if os.IsNotExist(err) {
@@ -85,43 +91,69 @@ func (c *SFTPClient) GetFilesInRemoteDir(remoteDir string, localDir string) erro
 
 	filesInfo, err := c.Client.ReadDir(remoteDir)
 	for _, fileInfo := range filesInfo {
-
 		if fileInfo.IsDir() {
 			dirName := fileInfo.Name()
 			// remoteDir is under the Linux path by default
 			remoteSubDir := remoteDir + "/" + dirName
 			localSubDir := filepath.Join(localDir, dirName)
-			c.GetFilesInRemoteDir(remoteSubDir, localSubDir)
+			c.DownloadDir(remoteSubDir, localSubDir)
 		}
+
 		srcPath := remoteDir + "/" + fileInfo.Name()
 		src, err := c.Client.OpenFile(srcPath, os.O_RDONLY)
 		if err != nil {
 			return err
 		}
 		defer src.Close()
+
 		dstPath := filepath.Join(localDir, fileInfo.Name())
 		dst, err := os.OpenFile(dstPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 		if err != nil {
 			continue
 		}
 		defer dst.Close()
+
 		_, err = io.Copy(dst, src)
 		if err != nil {
 			continue
 		}
-
 	}
-
 	return nil
 }
 
-func (c *SFTPClient) UploadFile() bool {
+func (c *SFTPClient) UploadFile(remoteFilepath string, localFilepath string) bool {
+	srcFile, err := os.Open(localFilepath)
+	if err != nil {
+		return false
+	}
+	defer srcFile.Close()
 
-	return false
+	remoteFilename := path.Base(localFilepath)
+	dstFile, err := c.Client.Create(path.Join(remoteFilepath, remoteFilename))
+	if err != nil {
+		fmt.Println("sftpClient.Create error : ", path.Join(remoteFilepath, remoteFilename))
+		log.Fatal(err)
+	}
+	defer dstFile.Close()
+	f, err := ioutil.ReadAll(srcFile)
+	if err != nil {
+		return false
+	}
+	dstFile.Write(f)
+	return true
 }
 
-func (c *SFTPClient) UploadFileAsync(ch chan<- bool) {
-	ok := c.UploadFile()
+func (c *SFTPClient) UploadFileAsync(remoteFilepath string, localFilepath string, ch chan<- bool) {
+	ok := c.UploadFile(remoteFilepath, localFilepath)
+	ch <- ok
+}
+
+func (c *SFTPClient) UploadDir() bool {
+	return true
+}
+
+func (c *SFTPClient) UploadDirAsync(ch chan<- bool) {
+	ok := c.UploadDir()
 	ch <- ok
 }
 

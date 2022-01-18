@@ -20,14 +20,12 @@ func Run(conf *config.InfoConfig) {
 			d, _ := time.ParseDuration(nodeConfig.Duration)
 			if nodeConfig.Duration == "-1" {
 				runWithInfinity(nodeConfig, _logger)
-				wg.Done()
 			} else if d == 0 {
 				run(nodeConfig, _logger)
-				wg.Done()
 			} else {
 				runWithDuration(nodeConfig, _logger)
-				wg.Done()
 			}
+			wg.Done()
 		}(name)
 	}
 	wg.Wait()
