@@ -34,9 +34,22 @@ func Run(conf *config.InfoConfig) {
 }
 
 func run(nodeConfig *config.NodeConfig, defaultLogger logger.Logger) {
+	allFlag := false
 	for _, option := range nodeConfig.Options {
-		//fetchAndSaveInfo(nodeConfig, option, defaultLogger)
-		defaultLogger.Info(option)
+		if option == config.AllInfo {
+			allFlag = true
+			break
+		}
+		if option == config.NoInfo {
+			return
+		}
+	}
+	if allFlag {
+		fetchAndSaveInfo(nodeConfig, config.AllInfo, defaultLogger)
+	} else {
+		for _, option := range nodeConfig.Options {
+			fetchAndSaveInfo(nodeConfig, option, defaultLogger)
+		}
 	}
 }
 

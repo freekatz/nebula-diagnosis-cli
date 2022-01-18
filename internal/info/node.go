@@ -158,7 +158,7 @@ func fetchStatusInfo(option config.InfoOption, nodeConfig *config.NodeConfig, de
 }
 
 func fetchFlagsInfo(option config.InfoOption, nodeConfig *config.NodeConfig, defaultLogger logger.Logger) (map[string]*service.NebulaFlagsInfo, error) {
-	if option == config.AllInfo || option == config.Stats {
+	if option == config.AllInfo || option == config.Flags {
 		serviceConfigs := nodeConfig.Services
 		serviceFlagsInfos := make(map[string]*service.NebulaFlagsInfo, len(serviceConfigs))
 		for name, serviceConfig := range serviceConfigs {
@@ -178,7 +178,7 @@ func fetchFlagsInfo(option config.InfoOption, nodeConfig *config.NodeConfig, def
 }
 
 func fetchMetricsInfo(option config.InfoOption, nodeConfig *config.NodeConfig, defaultLogger logger.Logger) (map[string]*service.NebulaMetricsInfo, error) {
-	if option == config.AllInfo || option == config.Stats {
+	if option == config.AllInfo || option == config.Metrics {
 		serviceConfigs := nodeConfig.Services
 		serviceMetricsInfos := make(map[string]*service.NebulaMetricsInfo, len(serviceConfigs))
 		for name, serviceConfig := range serviceConfigs {
