@@ -10,7 +10,7 @@
 *_product.yaml
 
 # binary file
-diag-cli
+*diag-cli
 
 # output and data path
 out/

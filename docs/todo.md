@@ -4,7 +4,7 @@
   - [x] cmd
   - [x] info: bug fix and tests
   - [ ] diag
-  - [x] pack
+  - [ ] pack: if SSH config != nil, will upload the Package by SFTP
 - [x] pkg
   - [x] config
   - [ ] diag
@@ -16,10 +16,9 @@
   - [x] utils
 - [x] tests
 - [ ] others
-  - [ ] docs
-  - [ ] scripts
-  - [ ] Makefile
-  - [ ] README.md
+  - [x] docs
+  - [x] Makefile
+  - [x] README.md
   - [ ] CHANGELOG.md
   - [ ] LICENSE.md
   - [ ] logger text format and standards

@@ -1,8 +1,7 @@
 package info
 
 import (
-	"context"
-	"log"
+	"sync"
 	"time"
 
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
@@ -10,11 +9,9 @@ import (
 )
 
 func Run(conf *config.InfoConfig) {
-	log.Println(conf)
-	// TODO fix the cancel bugs
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
+	nodeNumber := len(conf.Node)
+	wg := sync.WaitGroup{}
+	wg.Add(nodeNumber)
 	for name := range conf.Node {
 		go func(name string) {
 			nodeConfig := conf.Node[name]
@@ -23,28 +20,23 @@ func Run(conf *config.InfoConfig) {
 			d, _ := time.ParseDuration(nodeConfig.Duration)
 			if nodeConfig.Duration == "-1" {
 				runWithInfinity(nodeConfig, _logger)
+				wg.Done()
 			} else if d == 0 {
 				run(nodeConfig, _logger)
-				cancel() // TODO temp code
+				wg.Done()
 			} else {
 				runWithDuration(nodeConfig, _logger)
+				wg.Done()
 			}
 		}(name)
 	}
-
-	for {
-		select {
-		case <-ctx.Done():
-			return
-		}
-	}
-
+	wg.Wait()
 }
 
 func run(nodeConfig *config.NodeConfig, defaultLogger logger.Logger) {
 	for _, option := range nodeConfig.Options {
-		//fetchInfo(conf, option, defaultLogger)
-		fetchAndSaveInfo(nodeConfig, option, defaultLogger)
+		//fetchAndSaveInfo(nodeConfig, option, defaultLogger)
+		defaultLogger.Info(option)
 	}
 }
 
