@@ -93,7 +93,7 @@ func (c *NebulaCollector) PackageLogs() error {
 	}
 	newDir := c.Id
 	localDir := filepath.Join(c.NodeConfig.OutputDirPath, newDir)
-	err := c.SshClient.GetFilesInRemoteDir(remoteLogDir, localDir)
+	err := c.SshClient.DownloadDir(remoteLogDir, localDir)
 	if err != nil {
 		return err
 	}

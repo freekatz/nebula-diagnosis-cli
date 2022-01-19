@@ -23,13 +23,19 @@ func TestGetSFTPClient(t *testing.T) {
 	if err != nil {
 	}
 
-	//err = client.GetFileInRemotePath(path, localDir)
-	//if err != nil {
-	//	log.Fatal(err.Error())
-	//}
-
-	err = client.GetFilesInRemoteDir(path, localDir)
+	err = client.DownloadFile(path, localDir)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+
+	err = client.DownloadDir(path, localDir)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	// TODO
+	//err = client.UploadFile(path, localDir)
+	//if err != nil {
+	//	log.Fatal(err.Error())
+	//}
 }

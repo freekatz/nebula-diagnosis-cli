@@ -24,7 +24,9 @@ func Run(conf *config.PackConfig) {
 			_logger.Error("get sftp client failed")
 			return
 		}
-		ok := sftpClient.UploadFile()
+
+		// TODO test the upload function
+		ok := sftpClient.UploadFile(conf.TarFilename, conf.OutputDirPath)
 		if !ok {
 			_logger.Error("upload failed")
 		}
