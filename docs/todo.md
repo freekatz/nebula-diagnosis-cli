@@ -20,11 +20,11 @@
   - [x] Makefile
   - [x] README.md
   - [ ] CHANGELOG.md
-  - [ ] LICENSE.md
+  - [x] LICENSE.md
   - [ ] logger text format and standards
   - [ ] code structures, TODO and refactor
   - [ ] cli help text
-  - [ ] info output format
+  - [x] info output format
   - [ ] more infos support
   - [ ] return errors format and standards
   - [ ] ...
