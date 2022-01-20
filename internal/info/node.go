@@ -3,6 +3,7 @@ package info
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/1uvu/nebula-diagnosis-cli/pkg/utils"
 	"os"
 	"path/filepath"
 	"time"
@@ -32,36 +33,24 @@ func fetchAndSaveInfo(nodeConfig *config.NodeConfig, option config.InfoOption, d
 	if err != nil {
 		defaultLogger.Errorf("save json data failed: %s", err.Error())
 	}
+
 	dir := filepath.Join(nodeConfig.OutputDirPath, nodeConfig.SSH.Address)
-	p, _ := filepath.Abs(dir)
-	_, err = os.Stat(p)
-	if os.IsNotExist(err) {
-		os.MkdirAll(p, os.ModePerm)
+	absDir, _ := filepath.Abs(dir)
+	if !utils.IsDirExisted(absDir) {
+		os.MkdirAll(absDir, os.ModePerm)
 	}
+
 	timeUnix := time.Now().Unix()
 	filename := fmt.Sprintf("%d%s", timeUnix, ".data")
-	filePath := filepath.Join(p, filename)
-	_, err = os.Stat(filePath)
-	if os.IsNotExist(err) {
-		file, err := os.OpenFile(filePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-		if err != nil {
-			defaultLogger.Fatal(err)
-		}
-		_, err = file.Write(marshal)
-		_, err = file.Write([]byte("\n"))
-		if err != nil {
-			defaultLogger.Errorf("save json data failed: %s", err.Error())
-		}
-	} else {
-		file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_APPEND, 0666)
-		if err != nil {
-			defaultLogger.Fatal(err)
-		}
-		_, err = file.Write(marshal)
-		_, err = file.Write([]byte("\n"))
-		if err != nil {
-			defaultLogger.Errorf("save json data failed: %s", err.Error())
-		}
+	filePath := filepath.Join(absDir, filename)
+	file, err := os.OpenFile(filePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		defaultLogger.Fatal(err)
+	}
+	_, err = file.Write(marshal)
+	_, err = file.Write([]byte("\n"))
+	if err != nil {
+		defaultLogger.Errorf("save json data failed: %s", err.Error())
 	}
 }
 
@@ -72,7 +61,6 @@ func fetchInfo(nodeInfo *config.NodeConfig, option config.InfoOption, defaultLog
 	if err != nil {
 		defaultLogger.Errorf("fetch phy info failed: %s", err.Error())
 	} else {
-		// defaultLogger.Info(phyInfo.String())
 		if phyInfo != nil {
 			allInfo.PhyInfo = phyInfo
 			defaultLogger.Infof("%s physical info: %+v", nodeInfo.SSH.Address, *phyInfo)
@@ -83,7 +71,6 @@ func fetchInfo(nodeInfo *config.NodeConfig, option config.InfoOption, defaultLog
 	if err != nil {
 		defaultLogger.Errorf("fetch services status failed: %s", err.Error())
 	} else {
-		// defaultLogger.Info(phyInfo.String())
 		if statusInfos != nil {
 			for name, statusInfo := range statusInfos {
 				defaultLogger.Infof("%s status info: %+v", name, *statusInfo)
@@ -96,7 +83,6 @@ func fetchInfo(nodeInfo *config.NodeConfig, option config.InfoOption, defaultLog
 	if err != nil {
 		defaultLogger.Errorf("fetch services metrics failed: %s", err.Error())
 	} else {
-		// defaultLogger.Info(phyInfo.String())
 		if metricsInfos != nil {
 			for name, metricsInfo := range metricsInfos {
 				defaultLogger.Infof("%s metrics info: %+v", name, *metricsInfo)
@@ -109,7 +95,6 @@ func fetchInfo(nodeInfo *config.NodeConfig, option config.InfoOption, defaultLog
 	if err != nil {
 		defaultLogger.Errorf("fetch services flags failed: %s", err.Error())
 	} else {
-		// defaultLogger.Info(phyInfo.String())
 		if flagsInfos != nil {
 			for name, flagsInfo := range flagsInfos {
 				defaultLogger.Infof("%s flags info: %+v", name, *flagsInfo)
@@ -123,7 +108,7 @@ func fetchInfo(nodeInfo *config.NodeConfig, option config.InfoOption, defaultLog
 	if err != nil {
 		defaultLogger.Errorf("service package: failed, %s", err.Error())
 	} else {
-		defaultLogger.Info(nodeInfo.SSH.Address, " service package: success!")
+		defaultLogger.Info(nodeInfo.SSH.Address, " service package: success")
 	}
 
 	return allInfo

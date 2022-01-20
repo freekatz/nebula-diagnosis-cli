@@ -11,16 +11,13 @@ import (
 
 type NebulaCollector struct {
 	Id string
-
 	// Save and return the latest collected data,
 	NebulaStatusInfo  *NebulaStatusInfo
 	NebulaMetricsInfo *NebulaMetricsInfo
 	NebulaFlagsInfo   *NebulaFlagsInfo
-
 	NebulaType    config.ComponentType
 	NodeConfig    *config.NodeConfig
 	ServiceConfig *config.ServiceConfig
-
 	SshClient *remote.SFTPClient
 }
 

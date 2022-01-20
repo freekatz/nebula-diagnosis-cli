@@ -17,7 +17,6 @@ func ConvertToMap(metrics []string) map[string]QueryValue {
 	*/
 	for _, metric := range metrics {
 		metric, label := SplitMetric(metric)
-
 		s := strings.Split(metric, "=")
 		if len(s) != 2 {
 			continue
