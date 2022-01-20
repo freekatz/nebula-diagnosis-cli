@@ -50,6 +50,7 @@ type InfoOption string
 
 const (
 	Metrics  InfoOption = "metrics"
+	Flags    InfoOption = "flags"
 	Physical InfoOption = "physical"
 	Stats    InfoOption = "stats"
 	Logs     InfoOption = "logs"
