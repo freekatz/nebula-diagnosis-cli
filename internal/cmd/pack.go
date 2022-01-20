@@ -33,7 +33,7 @@ var packCMD = &cli.Command{
 		&cli.StringFlag{
 			Name:    "tar_filename",
 			Aliases: []string{"N"},
-			Usage:   "--tar_filename or -N, the output tar filename, will auto complete the suffix",
+			Usage:   "--tar_filename or -N, the output tar filename, will auto complete the suffix and output in current root dir",
 			Value:   "",
 		},
 	},
@@ -44,7 +44,7 @@ var packCMD = &cli.Command{
 			GlobalPackConfig, err = config.NewPackConfig(configPath, utils.GetConfigType(configPath))
 			if err != nil {
 				GlobalCMDLogger.Errorf("has error to create pack config.\n")
-				GlobalCMDLogger.Infof("now auto complete the pack config.\n")
+				return err
 			}
 		}
 		if GlobalPackConfig == nil {
@@ -59,7 +59,9 @@ var packCMD = &cli.Command{
 			tarFilepath := ctx.String("tar_filepath")
 			GlobalPackConfig.TarFilepath = tarFilepath
 		} else {
-			return errorx.ErrNoInputFilepath
+			if GlobalPackConfig.TarFilepath == "" {
+				return errorx.ErrNoInputFilepath
+			}
 		}
 		if ctx.IsSet("tar_filename") {
 			tarFilename := ctx.String("tar_filename")

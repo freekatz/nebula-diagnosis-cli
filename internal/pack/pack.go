@@ -16,6 +16,7 @@ func Run(conf *config.PackConfig) {
 	err := tgzPacker.Pack(conf.TarFilepath, filepath.Join(conf.OutputDirPath, conf.TarFilename))
 	if err != nil {
 		_logger.Error(err)
+		return
 	}
 
 	if conf.SSH != nil && conf.SSH.Validate() {
@@ -25,10 +26,10 @@ func Run(conf *config.PackConfig) {
 			return
 		}
 
-		// TODO test the upload function
-		ok := sftpClient.UploadFile(conf.TarFilename, conf.OutputDirPath)
+		ok := sftpClient.UploadFile(conf.RemoteDirPath, filepath.Join(conf.OutputDirPath, conf.TarFilename))
 		if !ok {
 			_logger.Error("upload failed")
+			return
 		}
 	}
 }

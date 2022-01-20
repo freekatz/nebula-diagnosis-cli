@@ -38,7 +38,6 @@ func fetchAndSaveInfo(nodeConfig *config.NodeConfig, option config.InfoOption, d
 	if os.IsNotExist(err) {
 		os.MkdirAll(p, os.ModePerm)
 	}
-
 	timeUnix := time.Now().Unix()
 	filename := fmt.Sprintf("%d%s", timeUnix, ".data")
 	filePath := filepath.Join(p, filename)

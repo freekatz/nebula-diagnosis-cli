@@ -12,6 +12,7 @@ type PackConfig struct {
 	OutputDirPath string     `mapstructure:"outputDirPath,omitempty"` // output location
 	TarFilepath   string     `mapstructure:"tarFilepath"`             // input tar filepath
 	TarFilename   string     `mapstructure:"tarFilename"`             // output tar filename, will output into OutputDirPath
+	RemoteDirPath string     `mapstructure:remoteDirPath`             // remote upload path
 	SSH           *SSHConfig `mapstructure:"ssh"`                     // ssh config for upload
 }
 
@@ -28,6 +29,9 @@ func (c *PackConfig) Complete() {
 }
 
 func (c *PackConfig) Validate() bool {
+	if c.SSH != nil && c.RemoteDirPath == "" {
+		return false
+	}
 	return c.TarFilepath != ""
 }
 

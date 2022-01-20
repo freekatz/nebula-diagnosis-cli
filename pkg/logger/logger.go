@@ -65,9 +65,9 @@ func (d *defaultLogger) warn(msg string) {
 	if d.logToFile && d.outputDirPath == "" {
 		d.cmdLogger.Warn("logger output dir path is \"\", so redirect the logging into cmd")
 	}
-	d.cmdLogger.Info(msg)
+	d.cmdLogger.Warn(msg)
 	if d.logToFile && d.outputDirPath != "" {
-		d.fileLogger.Info(msg)
+		d.fileLogger.Warn(msg)
 	}
 }
 func (d *defaultLogger) Error(msg ...interface{}) {
@@ -80,9 +80,9 @@ func (d *defaultLogger) error(msg string) {
 	if d.logToFile && d.outputDirPath == "" {
 		d.cmdLogger.Warn("logger output dir path is \"\", so redirect the logging into cmd")
 	}
-	d.cmdLogger.Info(msg)
+	d.cmdLogger.Error(msg)
 	if d.logToFile && d.outputDirPath != "" {
-		d.fileLogger.Info(msg)
+		d.fileLogger.Error(msg)
 	}
 }
 func (d *defaultLogger) Fatal(msg ...interface{}) {
@@ -95,9 +95,9 @@ func (d *defaultLogger) fatal(msg string) {
 	if d.logToFile && d.outputDirPath == "" {
 		d.cmdLogger.Warn("logger output dir path is \"\", so redirect the logging into cmd")
 	}
-	d.cmdLogger.Info(msg)
+	d.cmdLogger.Fatal(msg)
 	if d.logToFile && d.outputDirPath != "" {
-		d.fileLogger.Info(msg)
+		d.fileLogger.Fatal(msg)
 	}
 }
 
@@ -128,7 +128,7 @@ func initLogger(name string, outputDirPath string, logToFile bool) {
 		p, _ := filepath.Abs(outputDirPath)
 		_, err := os.Stat(p)
 		if os.IsNotExist(err) {
-			os.Mkdir(p, os.ModePerm)
+			os.MkdirAll(p, os.ModePerm)
 		}
 
 		filename := fmt.Sprintf("%s_%s", name, strconv.FormatInt(timeUnix, 10))

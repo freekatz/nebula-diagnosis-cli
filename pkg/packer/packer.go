@@ -96,19 +96,20 @@ func (tp *TgzPacker) tarFolder(tarWriter *tar.Writer, tarFilepath string, baseFi
 }
 
 // Pack sourceFullPath is the source path of file or folder, tarFileName is the tar package
-func (tp *TgzPacker) Pack(tarFilepath string, tarFilename string) (err error) {
+func (tp *TgzPacker) Pack(tarFilepath string, targetFilepath string) (err error) {
 	tarFilepath = strings.TrimPrefix(tarFilepath, "./")
-	tarFilename = strings.TrimPrefix(tarFilename, "./")
+	targetFilepath = strings.TrimPrefix(targetFilepath, "./")
+
 	info, err := os.Stat(tarFilepath)
 	if err != nil {
 		return err
 	}
 
-	if utils.IsFileExisted(tarFilename) {
+	if utils.IsFileExisted(targetFilepath) {
 		return errorx.ErrFileHasExisted
 	}
 
-	file, err := os.Create(tarFilename)
+	file, err := os.Create(targetFilepath)
 	if err != nil {
 		return err
 	}
@@ -125,6 +126,7 @@ func (tp *TgzPacker) Pack(tarFilepath string, tarFilename string) (err error) {
 		}
 	}()
 
+	// TODO fix `archive/tar: write too long` error
 	tarWriter := tar.NewWriter(gzipWriter)
 	defer func() {
 		if err2 := tarWriter.Close(); err2 != nil && err == nil {

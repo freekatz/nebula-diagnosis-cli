@@ -1,9 +1,8 @@
 package remote
 
 import (
-	"fmt"
+	"github.com/1uvu/nebula-diagnosis-cli/pkg/utils"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"path"
@@ -131,15 +130,16 @@ func (c *SFTPClient) UploadFile(remoteFilepath string, localFilepath string) boo
 	remoteFilename := path.Base(localFilepath)
 	dstFile, err := c.Client.Create(path.Join(remoteFilepath, remoteFilename))
 	if err != nil {
-		fmt.Println("sftpClient.Create error : ", path.Join(remoteFilepath, remoteFilename))
-		log.Fatal(err)
+		log.Fatal("remote file create error : ", path.Join(remoteFilepath, remoteFilename))
 	}
 	defer dstFile.Close()
-	f, err := ioutil.ReadAll(srcFile)
+
+	srcStat, _ := srcFile.Stat()
+	err = utils.PrintWithProcessBar(srcStat.Size(), "uploading", srcFile, dstFile)
 	if err != nil {
 		return false
 	}
-	dstFile.Write(f)
+
 	return true
 }
 

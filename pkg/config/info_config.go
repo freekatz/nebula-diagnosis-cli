@@ -1,6 +1,7 @@
 package config
 
 import (
+	"path/filepath"
 	"time"
 
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
@@ -25,11 +26,11 @@ type (
 		Host          *HostConfig               `mapstructure:"host"`               // node host
 		SSH           *SSHConfig                `mapstructure:"ssh"`                // node ssh
 		Services      map[string]*ServiceConfig `mapstructure:"services"`           // node service
-		OutputDirPath string                    `mapstructure:"outputDirPath"`      // output location
 		LogToFile     bool                      `mapstructure:"logToFile"`          // logging to file or cmd
 		Duration      string                    `mapstructure:"duration,omitempty"` // duration of info fetching, default is 0
 		Period        string                    `mapstructure:"period,omitempty"`   // period of info fetching, default is 0
 		Options       []InfoOption              `mapstructure:"option,omitempty"`   // info to fetch, default is all
+		OutputDirPath string                    // output location
 	}
 
 	HostConfig struct {
@@ -80,8 +81,8 @@ func (c *InfoConfig) Complete() {
 	if c.Node == nil {
 		c.Node = map[string]*NodeConfig{}
 	}
-	for _, node := range c.Node {
-		node.Complete(c.Common)
+	for name, node := range c.Node {
+		node.Complete(name, c.Common)
 	}
 }
 
@@ -109,7 +110,7 @@ func (c *CommonConfig) Complete() {
 	}
 }
 
-func (c *NodeConfig) Complete(common *CommonConfig) {
+func (c *NodeConfig) Complete(name string, common *CommonConfig) {
 	if c.SSH != nil {
 		c.SSH.Complete()
 	}
@@ -119,6 +120,7 @@ func (c *NodeConfig) Complete(common *CommonConfig) {
 	if c.OutputDirPath == "" {
 		c.OutputDirPath = defaultOutputDirPath
 	}
+	c.OutputDirPath = filepath.Join(c.OutputDirPath, name)
 	if !c.LogToFile {
 		c.LogToFile = common.LogToFile
 	}
