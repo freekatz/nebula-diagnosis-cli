@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
+
 	"golang.org/x/crypto/ssh"
 )
 

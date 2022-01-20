@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
+
 	"github.com/spf13/viper"
 )
 

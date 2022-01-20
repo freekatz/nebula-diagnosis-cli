@@ -2,8 +2,9 @@ package tests
 
 import (
 	"fmt"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/info/physical"
 	"testing"
+
+	"github.com/1uvu/nebula-diagnosis-cli/pkg/info/physical"
 )
 
 func TestPhysicalInfoFmt(t *testing.T) {

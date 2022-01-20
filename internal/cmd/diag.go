@@ -1,11 +1,12 @@
 package cmd
 
 import (
-	"github.com/1uvu/nebula-diagnosis-cli/internal/diag"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
 	"strings"
 
+	"github.com/1uvu/nebula-diagnosis-cli/internal/diag"
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
+	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
+
 	"github.com/urfave/cli/v2"
 )
 

@@ -4,7 +4,7 @@
   - [x] cmd
   - [x] info: bug fix and tests
   - [ ] diag
-  - [ ] pack: if SSH config != nil, will upload the Package by SFTP
+  - [x] pack: if SSH config != nil, will upload the Package by SFTP
 - [x] pkg
   - [x] config
   - [ ] diag

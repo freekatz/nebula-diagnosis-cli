@@ -1,7 +1,6 @@
 package remote
 
 import (
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/utils"
 	"io"
 	"log"
 	"os"
@@ -10,6 +9,8 @@ import (
 	"sync"
 
 	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
+	"github.com/1uvu/nebula-diagnosis-cli/pkg/utils"
+
 	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
 )

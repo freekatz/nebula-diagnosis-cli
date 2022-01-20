@@ -1,8 +1,9 @@
 package utils
 
 import (
-	"github.com/schollz/progressbar/v3"
 	"io"
+
+	"github.com/schollz/progressbar/v3"
 )
 
 func PrintWithProcessBar(bytesLength int64, description string, body io.ReadCloser, writers ...io.Writer) error {
