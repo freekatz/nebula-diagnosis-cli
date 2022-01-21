@@ -11,5 +11,5 @@ fmt:
 build: clean fmt
 	@go build -o nebula-diag-cli cmd/main.go
 
-test: build
+test:
 	go test -v ./tests/...

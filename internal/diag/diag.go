@@ -1,8 +1,8 @@
 package diag
 
 import (
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/logger"
+	"github.com/nebula/nebula-diagnose/pkg/config"
+	"github.com/nebula/nebula-diagnose/pkg/logger"
 )
 
 func Run(conf *config.DiagConfig) {

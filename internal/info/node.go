@@ -3,16 +3,16 @@ package info
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/utils"
+	"github.com/nebula/nebula-diagnose/pkg/utils"
 	"os"
 	"path/filepath"
 	"time"
 
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/info/physical"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/info/service"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/logger"
+	"github.com/nebula/nebula-diagnose/pkg/config"
+	"github.com/nebula/nebula-diagnose/pkg/errorx"
+	"github.com/nebula/nebula-diagnose/pkg/info/physical"
+	"github.com/nebula/nebula-diagnose/pkg/info/service"
+	"github.com/nebula/nebula-diagnose/pkg/logger"
 )
 
 // NewAllInfo Save the last collected information

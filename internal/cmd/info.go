@@ -1,10 +1,10 @@
 package cmd
 
 import (
-	"github.com/1uvu/nebula-diagnosis-cli/internal/info"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/utils"
+	"github.com/nebula/nebula-diagnose/internal/info"
+	"github.com/nebula/nebula-diagnose/pkg/config"
+	"github.com/nebula/nebula-diagnose/pkg/errorx"
+	"github.com/nebula/nebula-diagnose/pkg/utils"
 
 	"github.com/urfave/cli/v2"
 )

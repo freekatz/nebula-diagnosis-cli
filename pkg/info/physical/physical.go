@@ -4,9 +4,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/remote"
+	"github.com/nebula/nebula-diagnose/pkg/config"
+	"github.com/nebula/nebula-diagnose/pkg/errorx"
+	"github.com/nebula/nebula-diagnose/pkg/remote"
 )
 
 type PhyInfo struct {

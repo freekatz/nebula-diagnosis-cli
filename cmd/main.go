@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/1uvu/nebula-diagnosis-cli/internal/cmd"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
+	"github.com/nebula/nebula-diagnose/internal/cmd"
+	"github.com/nebula/nebula-diagnose/pkg/errorx"
 
 	"github.com/urfave/cli/v2"
 )

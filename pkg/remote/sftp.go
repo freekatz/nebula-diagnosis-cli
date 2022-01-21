@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/utils"
+	"github.com/nebula/nebula-diagnose/pkg/config"
+	"github.com/nebula/nebula-diagnose/pkg/utils"
 
 	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"

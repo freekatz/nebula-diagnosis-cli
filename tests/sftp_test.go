@@ -5,8 +5,8 @@ import (
 	"log"
 	"testing"
 
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/remote"
+	"github.com/nebula/nebula-diagnose/pkg/config"
+	"github.com/nebula/nebula-diagnose/pkg/remote"
 )
 
 func TestGetSFTPClient(t *testing.T) {

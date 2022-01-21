@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/utils"
+	"github.com/nebula/nebula-diagnose/pkg/errorx"
+	"github.com/nebula/nebula-diagnose/pkg/utils"
 )
 
 type TgzPacker struct {

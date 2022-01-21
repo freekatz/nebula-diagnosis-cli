@@ -3,9 +3,9 @@ package cmd
 import (
 	"strings"
 
-	"github.com/1uvu/nebula-diagnosis-cli/internal/diag"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
+	"github.com/nebula/nebula-diagnose/internal/diag"
+	"github.com/nebula/nebula-diagnose/pkg/config"
+	"github.com/nebula/nebula-diagnose/pkg/errorx"
 
 	"github.com/urfave/cli/v2"
 )

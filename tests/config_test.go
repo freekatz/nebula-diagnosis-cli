@@ -4,7 +4,7 @@ import (
 	"log"
 	"testing"
 
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
+	"github.com/nebula/nebula-diagnose/pkg/config"
 )
 
 func TestNewInfoConfig(t *testing.T) {
