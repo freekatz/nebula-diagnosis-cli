@@ -27,10 +27,10 @@ var diagCMD = &cli.Command{
 			Value:   false,
 		},
 		&cli.StringFlag{
-			Name:    "input_dir_path",
-			Aliases: []string{"I"},
-			Usage:   "--input_dir_path or -I, the input dir of infos data",
-			Value:   "",
+			Name:     "input_dir_path",
+			Aliases:  []string{"I"},
+			Usage:    "--input_dir_path or -I, the input dir of infos data",
+			Required: true,
 		},
 		&cli.StringFlag{
 			Name:  "option",

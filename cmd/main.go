@@ -1,11 +1,11 @@
 package main
 
 import (
-	"log"
-	"os"
-
 	"github.com/nebula/nebula-diagnose/internal/cmd"
 	"github.com/nebula/nebula-diagnose/pkg/errorx"
+	"log"
+	"os"
+	"strings"
 
 	"github.com/urfave/cli/v2"
 )
@@ -13,7 +13,7 @@ import (
 func main() {
 	app := &cli.App{
 		Name:                   cmd.Name,
-		Usage:                  cmd.Desc,
+		Usage:                  strings.Join([]string{cmd.Desc, cmd.Banner}, "\n"),
 		Version:                cmd.Version,
 		UseShortOptionHandling: true,
 		Flags:                  cmd.GlobalOptions,

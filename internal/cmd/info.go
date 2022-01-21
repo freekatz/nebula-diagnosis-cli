@@ -14,10 +14,10 @@ var infoCMD = &cli.Command{
 	Usage: "fetch the nebula graph infos",
 	Flags: []cli.Flag{
 		&cli.StringFlag{
-			Name:    "config",
-			Aliases: []string{"C"},
-			Usage:   "--config or -C, the config file for fetching infos",
-			Value:   "",
+			Name:     "config",
+			Aliases:  []string{"C"},
+			Usage:    "--config or -C, the config file for fetching infos",
+			Required: true,
 		},
 	},
 	Action: func(ctx *cli.Context) error {

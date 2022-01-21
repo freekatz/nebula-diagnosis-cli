@@ -15,10 +15,10 @@ type NebulaCollector struct {
 	NebulaStatusInfo  *NebulaStatusInfo
 	NebulaMetricsInfo *NebulaMetricsInfo
 	NebulaFlagsInfo   *NebulaFlagsInfo
-	NebulaType    config.ComponentType
-	NodeConfig    *config.NodeConfig
-	ServiceConfig *config.ServiceConfig
-	SshClient *remote.SFTPClient
+	NebulaType        config.ComponentType
+	NodeConfig        *config.NodeConfig
+	ServiceConfig     *config.ServiceConfig
+	SshClient         *remote.SFTPClient
 }
 
 type (

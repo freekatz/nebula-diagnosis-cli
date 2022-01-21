@@ -9,8 +9,9 @@ import (
 
 const (
 	Name    = "nebula diagnosis cli"
-	Desc    = `A free and open source distributed diagnosis cli tool for nebula graph`
+	Desc    = "A free and open source distributed diagnosis cli tool for nebula graph"
 	Version = "v0.0.1"
+	Banner  = "  _   _      _           _         _____  _                                  \n | \\ | |    | |         | |       |  __ \\(_)                                 \n |  \\| | ___| |__  _   _| | __ _  | |  | |_  __ _  __ _ _ __   ___  ___  ___ \n | . ` |/ _ \\ '_ \\| | | | |/ _` | | |  | | |/ _` |/ _` | '_ \\ / _ \\/ __|/ _ \\\n | |\\  |  __/ |_) | |_| | | (_| | | |__| | | (_| | (_| | | | | (_) \\__ \\  __/\n |_| \\_|\\___|_.__/ \\__,_|_|\\__,_| |_____/|_|\\__,_|\\__, |_| |_|\\___/|___/\\___|\n                                                   __/ |                     \n                                                  |___/                      "
 )
 
 var (
