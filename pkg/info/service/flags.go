@@ -3,7 +3,7 @@ package service
 import (
 	"strconv"
 
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
+	"github.com/nebula/nebula-diagnose/pkg/config"
 )
 
 func GetFlagsInfo(nodeConfig *config.NodeConfig, serviceConfig *config.ServiceConfig) (*NebulaFlagsInfo, error) {

@@ -1,11 +1,12 @@
 package tests
 
 import (
+	"errors"
 	"log"
 	"testing"
 
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/remote"
+	"github.com/nebula/nebula-diagnose/pkg/config"
+	"github.com/nebula/nebula-diagnose/pkg/remote"
 )
 
 func TestGetSFTPClient(t *testing.T) {
@@ -21,12 +22,13 @@ func TestGetSFTPClient(t *testing.T) {
 
 	client, err := remote.GetSFTPClient(conf.Username, conf)
 	if err != nil {
-	}
-
-	err = client.DownloadFile(path, localDir)
-	if err != nil {
 		log.Fatal(err.Error())
 	}
+
+	//err = client.DownloadFile(path, localDir)
+	//if err != nil {
+	//	log.Fatal(err.Error())
+	//}
 
 	err = client.DownloadDir(path, localDir)
 	if err != nil {
@@ -34,8 +36,10 @@ func TestGetSFTPClient(t *testing.T) {
 	}
 
 	// TODO
-	//err = client.UploadFile(path, localDir)
-	//if err != nil {
-	//	log.Fatal(err.Error())
-	//}
+	localFilePath := "../cmd/main.go"
+	remoteFilePath := "/home/katz.zhang/logs"
+	ok := client.UploadFile(remoteFilePath, localFilePath)
+	if !ok {
+		log.Fatal(errors.New("upload file failed"))
+	}
 }

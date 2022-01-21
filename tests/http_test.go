@@ -5,7 +5,7 @@ import (
 	"log"
 	"testing"
 
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/remote"
+	"github.com/nebula/nebula-diagnose/pkg/remote"
 )
 
 func TestGetNebulaMetrics(t *testing.T) {

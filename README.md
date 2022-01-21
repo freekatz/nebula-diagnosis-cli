@@ -1,6 +1,14 @@
-# nebula-diagnosis-cli
+# nebula-diagnose
 
-Nebula Diagnosis CLI Tool is an information diagnosis cli tool for the nebula service and the node to which the service belongs.
+Nebula Diagnose CLI Tool is an information diagnose cli tool for the nebula service and the node to which the service belongs.
+
+nebula diagnose supports the following functions:
+
+- Collect physical information of nodes 
+- Collect nebula service metrics, flags and status
+- Download the log under nebula service running log directory
+- Diagnose based on collected information (TODO)
+- Package files or folders for upload 
 
 ## Usage
 

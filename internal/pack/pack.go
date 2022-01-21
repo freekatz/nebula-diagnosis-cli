@@ -3,10 +3,10 @@ package pack
 import (
 	"path/filepath"
 
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/logger"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/packer"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/remote"
+	"github.com/nebula/nebula-diagnose/pkg/config"
+	"github.com/nebula/nebula-diagnose/pkg/logger"
+	"github.com/nebula/nebula-diagnose/pkg/packer"
+	"github.com/nebula/nebula-diagnose/pkg/remote"
 )
 
 var _logger = logger.GetLogger("pack", "", false)

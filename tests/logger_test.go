@@ -3,7 +3,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/logger"
+	"github.com/nebula/nebula-diagnose/pkg/logger"
 )
 
 func TestGetCMDLogger(t *testing.T) {

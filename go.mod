@@ -1,4 +1,4 @@
-module github.com/1uvu/nebula-diagnosis-cli
+module github.com/nebula/nebula-diagnose
 
 go 1.17
 

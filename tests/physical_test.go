@@ -4,8 +4,8 @@ import (
 	"log"
 	"testing"
 
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/info/physical"
+	"github.com/nebula/nebula-diagnose/pkg/config"
+	"github.com/nebula/nebula-diagnose/pkg/info/physical"
 )
 
 func TestGetInfo(t *testing.T) {

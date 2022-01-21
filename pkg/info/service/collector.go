@@ -4,23 +4,20 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/errorx"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/remote"
+	"github.com/nebula/nebula-diagnose/pkg/config"
+	"github.com/nebula/nebula-diagnose/pkg/errorx"
+	"github.com/nebula/nebula-diagnose/pkg/remote"
 )
 
 type NebulaCollector struct {
 	Id string
-
 	// Save and return the latest collected data,
 	NebulaStatusInfo  *NebulaStatusInfo
 	NebulaMetricsInfo *NebulaMetricsInfo
 	NebulaFlagsInfo   *NebulaFlagsInfo
-
 	NebulaType    config.ComponentType
 	NodeConfig    *config.NodeConfig
 	ServiceConfig *config.ServiceConfig
-
 	SshClient *remote.SFTPClient
 }
 

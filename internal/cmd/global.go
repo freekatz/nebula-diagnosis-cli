@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/config"
-	"github.com/1uvu/nebula-diagnosis-cli/pkg/logger"
+	"github.com/nebula/nebula-diagnose/pkg/config"
+	"github.com/nebula/nebula-diagnose/pkg/logger"
 
 	"github.com/urfave/cli/v2"
 )
