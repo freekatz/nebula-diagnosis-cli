@@ -3,7 +3,6 @@ package info
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/nebula/nebula-diagnose/pkg/utils"
 	"os"
 	"path/filepath"
 	"time"
@@ -13,6 +12,7 @@ import (
 	"github.com/nebula/nebula-diagnose/pkg/info/physical"
 	"github.com/nebula/nebula-diagnose/pkg/info/service"
 	"github.com/nebula/nebula-diagnose/pkg/logger"
+	"github.com/nebula/nebula-diagnose/pkg/utils"
 )
 
 // NewAllInfo Save the last collected information
